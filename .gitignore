@@ -1,0 +1,13 @@
+.DS_Store
+*.log
+node_modules/
+.ghostspend/
+*.local.json
+.env
+.vscode/
+.idea/
+config.json
+
+# Personal/local Claude Code instruction overrides — never commit these
+CLAUDE.local.md
+.claude/settings.local.json

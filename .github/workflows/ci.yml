@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  shellcheck:
+    name: Shellcheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scandir: './scripts'
+          severity: warning
+
+  syntax-check:
+    name: Bash syntax check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check bash syntax
+        run: |
+          for f in scripts/*.sh; do
+            echo "Checking $f"
+            bash -n "$f"
+          done
+
+  markdown-lint:
+    name: Markdown lint (docs, skills, agents, commands)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lint Markdown files
+        uses: DavidAnson/markdownlint-cli2-action@v16
+        with:
+          globs: |
+            skills/**/*.md
+            agents/**/*.md
+            commands/**/*.md
+            docs/**/*.md
+            examples/**/*.md
+            README.md
+            ROADMAP.md
+            CONTRIBUTING.md
+            SECURITY.md
+            CHANGELOG.md
+        continue-on-error: true
+
+  json-validate:
+    name: Validate JSON manifests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate plugin.json
+        run: |
+          python3 -c "import json; json.load(open('.claude-plugin/plugin.json'))"
+          echo "plugin.json is valid JSON"
+      - name: Validate marketplace.json
+        run: |
+          python3 -c "import json; json.load(open('marketplace.json'))"
+          echo "marketplace.json is valid JSON"
+      - name: Validate package.json
+        run: |
+          python3 -c "import json; json.load(open('package.json'))"
+          echo "package.json is valid JSON"

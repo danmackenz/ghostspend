@@ -1,0 +1,12 @@
+{
+  "name": "ghostspend-marketplace",
+  "owner": "danmackenzie",
+  "plugins": [
+    {
+      "name": "ghostspend",
+      "source": "./",
+      "description": "Find the AI spend you didn't know you had — audits Claude Code, Codex CLI, Gemini CLI and other AI CLI tools for hidden token/cost leakage.",
+      "version": "0.1.0"
+    }
+  ]
+}
