@@ -52,13 +52,17 @@ jobs:
         with:
           node-version: 24
 
+      - name: Install markdownlint-cli2
+        run: npm install --global markdownlint-cli2
+
       - name: Lint Markdown files
-        uses: DavidAnson/markdownlint-cli2-action@v24
-        with:
-          globs: |
-            **/*.md
-            !node_modules
-            !LICENSE.md
+        run: |
+          set -euo pipefail
+          markdownlint-cli2 \
+            --config .markdownlint-cli2.json \
+            "**/*.md" \
+            "#node_modules" \
+            "#LICENSE.md"
 
   json-validate:
     name: Validate JSON manifests
