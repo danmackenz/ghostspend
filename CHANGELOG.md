@@ -4,7 +4,8 @@ All notable changes to GhostSpend are documented here.
 
 ## [Unreleased]
 
-### Added
+### Added (initial release)
+
 - `CLAUDE.md`: full project contract for this repo (not the plugin
   product) — commands, architecture rules, task workflows, security
   constraints, and a completion checklist, following documented Claude
@@ -31,6 +32,7 @@ All notable changes to GhostSpend are documented here.
   flagged-but-expected tools, Codex cost estimates, permission prompts).
 
 ### Changed
+
 - `README.md`: repository structure diagram now lists `CLAUDE.md`,
   `AGENTS.md`, `ROADMAP.md`, `docs/`, and `examples/`, with a short note
   distinguishing `CLAUDE.md`/`AGENTS.md` from the plugin's own
@@ -58,6 +60,7 @@ All notable changes to GhostSpend are documented here.
 ## [0.1.0] — Initial release
 
 ### Added
+
 - `ghostspend-audit` skill: full diagnostic methodology covering hooks, MCP
   server health, plugin build integrity, project-level config drift, and
   cross-provider spend via `ccusage`.
@@ -76,6 +79,7 @@ All notable changes to GhostSpend are documented here.
   baseline and scan directories between runs.
 
 ### Known Limitations
+
 - No real-time monitoring — Claude Code hooks do not currently expose live
   token/cost data, so this remains an on-demand audit tool.
 - Codex CLI spend figures are estimates (no native OpenAI cost API used by
