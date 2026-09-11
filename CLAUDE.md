@@ -141,6 +141,7 @@ check passed without running it.
 ## Task-specific workflows
 
 ### Adding a new diagnostic check
+
 1. Confirm the check's underlying command actually works by running it
    yourself first — do not add speculative checks.
 2. Add the shell logic to `scripts/ghostspend.sh`, following the existing
@@ -153,13 +154,16 @@ check passed without running it.
    the severity table in `docs/gs-fix-dev-plan.md` so `/gs-fix` (once
    built) handles it correctly — even before `/gs-fix` itself exists.
 
+
 ### Fixing a bug in a script
+
 1. Reproduce the failure by running the script yourself.
 2. Identify the root cause before editing — state it in the PR.
 3. Make the smallest fix; do not refactor unrelated sections.
 4. Re-run `shellcheck` and the script manually to confirm the fix.
 
 ### Modifying a skill or agent's Markdown
+
 1. Edit the file.
 2. Install this repo locally as a plugin (README.md "Option A") and
    actually invoke `/gs-setup` or `/gs-audit` in a live Claude Code
@@ -169,6 +173,7 @@ check passed without running it.
    diff.
 
 ### Working on `/gs-fix` (planned, v0.2.x)
+
 1. Read `docs/gs-fix-dev-plan.md` in full before writing any code — it
    defines the phase order (severity tagging first, then a safe-fix-only
    skeleton, then the full 4-option flow) and the non-negotiable security

@@ -8,7 +8,8 @@ labels: bug
 **Describe the bug**
 A clear, concise description of what went wrong.
 
-**Command run**
+### Command run
+
 ```
 paste the exact command or /slash-command you ran
 ```
@@ -19,7 +20,8 @@ What you expected to happen.
 **Actual behavior**
 What actually happened. Paste the full terminal output if possible.
 
-**Environment**
+### Environment
+
 - OS: (macOS / Linux / WSL / Git Bash on Windows)
 - Bash version: `bash --version`
 - Claude Code version (if applicable): `claude --version`

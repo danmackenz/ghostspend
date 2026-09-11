@@ -17,7 +17,10 @@ plain bash and Markdown (with YAML frontmatter for skills/agents/commands).
 
 ## Repository Structure
 
+```bash
+test -f ~/.ghostspend/config.json
 ```
+
 .claude-plugin/plugin.json       Plugin manifest — keep in sync with actual
                                   files present in agents/, skills/, commands/
 agents/                           Orchestrating agent(s)
