@@ -52,51 +52,64 @@ Run via the Bash tool. Expect approval prompts for new command types on
 first use — normal Claude Code behavior, not something to bypass.
 
 ### Step 1 — Identify unfamiliar binaries before assuming malice
+
 `file <path>` before `cat`-ing an unknown executable. A garbled binary dump
 is not inherently a red flag — check `<tool> --version` / `--help` first.
 
 ### Step 2 — Audit global and per-project hooks
-```
+
+```bash
 cat ~/.claude/settings.json | grep -A 5 hooks
 find <project_parent_dirs> -maxdepth 4 -path "*/.claude/settings.json" -exec cat {} \;
-```
+```bash
+
 Hooks merge across global and project scope; a project-local hook does not
 replace a global one. Flag only broad-matcher `PreToolUse` hooks with no
 clear purpose.
 
 ### Step 3 — Check MCP server health
-```
+
+```bash
 claude mcp list
-```
+```bash
+
 Categorize: `Needs authentication` (inert, low priority), `CONNECTION_CLOSED`
 (likely local process crash, see Step 4), auth/config errors (often a
 duplicate of a working entry), `Pending approval` with a project-local
 `.mcp.json` path (usually a directory-context artifact).
 
 ### Step 4 — Diagnose local MCP server crashes
+
 Run the failing command directly (e.g. `node /path/to/server.js`). A
 `MODULE_NOT_FOUND` on a `dist/...` path usually means unbuilt TypeScript
 source. Check `package.json` for a `build` script, then, with confirmation:
-```
+
+```bash
 cd /path/to/plugin && npm install && npm run build
-```
+```bash
+
 This fix is global if the plugin cache is shared across projects (it
 typically is).
 
 ### Step 5 — Scan for project-level config drift
-```
+
+```bash
 find <parent_dir> -maxdepth 4 -path "*/.claude/settings.json"
 find <parent_dir> -maxdepth 3 -iname ".mcp.json" -not -path "*/node_modules/*"
-```
+```bash
+
 Use `scan_dirs` from `~/.ghostspend/config.json` if present; otherwise ask
 the user directly rather than guessing at a default layout.
 
 ### Step 6 — Validate cross-provider spend
+
 Prefer a global `ccusage` install over `npx` for speed. Run the **combined**
 report with no source restriction:
-```
+
+```bash
 ccusage daily
-```
+```bash
+
 This surfaces every locally-detected AI CLI tool (Claude Code, Codex CLI,
 Gemini CLI, GitHub Copilot CLI, OpenCode, Amp, Droid, Qwen, Grok Build CLI,
 and more) in one pass. Cross-reference the tools shown against
@@ -105,22 +118,27 @@ that list is a **flagged finding** — surface it prominently, not as a
 routine line item.
 
 Drill into any flagged tool specifically:
-```
+
+```bash
 ccusage codex daily
 ccusage gemini daily
-```
+```bash
+
 If `rtk` is installed, its `cc-economics` command gives a faster
 Claude-Code-only view but never substitutes for the combined `ccusage`
 check — always run both.
 
 ### Step 7 — Investigate the source of flagged usage
+
 Don't just report the number — help find *why* it ran:
+
 - Cron jobs, launchd agents, or CI pipelines invoking Codex CLI or
   triggering subagent calls on a different model.
 - `~/.codex/config.toml` and any `notify` hooks firing automatically.
 - IDE extensions that silently shell out to Codex or a Claude subagent.
 
 ### Step 8 — Note ecosystem limitations honestly
+
 Claude Code hooks don't currently receive live token/cost data as input
 (open upstream feature request). Codex CLI has no native dollar-cost
 tracking — `ccusage`'s Codex figures are estimates from token counts

@@ -22,23 +22,29 @@ the user to re-explain their setup each time.
 ## Procedure
 
 ### Step 1 — Check dependencies
-```
+
+```bash
 command -v ccusage >/dev/null 2>&1 && echo "ccusage: installed" || echo "ccusage: MISSING"
 command -v claude >/dev/null 2>&1 && echo "claude: installed" || echo "claude: MISSING"
 command -v rtk >/dev/null 2>&1 && echo "rtk: installed (optional)" || echo "rtk: not installed (optional)"
-```
+```bash
+
 If `ccusage` is missing, ask the user for confirmation before installing —
 this is a global npm install and should not happen silently:
-```
+
+```bash
 npm install -g ccusage
-```
+```bash
+
 If the user declines, note that the audit skill will fall back to
 `npx ccusage`, which works but is slower on every run.
 
 ### Step 2 — Detect which AI CLI tools have local activity at all
-```
+
+```bash
 ls -d ~/.codex ~/.gemini ~/.config/opencode ~/.claude 2>/dev/null
-```
+```bash
+
 Present whatever is found to the user as a checklist-style question: "I
 found local data for: Claude Code, Codex CLI. Which of these do you
 actively and knowingly use? (Anything you don't select will be flagged
@@ -49,14 +55,17 @@ exactly the ambiguous case GhostSpend exists to catch, so don't pre-filter
 it out based on your own guess.
 
 ### Step 3 — Record project scan directories
+
 Ask the user where their coding projects live (they may have multiple
 parent folders, as in the original diagnostic case: a GitHub folder plus
 one or two tool-specific folders). Do not assume `~/Documents` or
 `~/Projects` — ask directly, since layouts vary widely.
 
 ### Step 4 — Write the config file
+
 Create `~/.ghostspend/config.json` (confirm with the user before writing,
 since this is a new file on their system):
+
 ```json
 {
   "known_tools": ["claude-code", "codex"],
@@ -65,9 +74,10 @@ since this is a new file on their system):
   "rtk_installed": true,
   "setup_completed_at": "<ISO 8601 timestamp>"
 }
-```
+```bash
 
 ### Step 5 — Suggest (don't apply) permission pre-approval
+
 Explain that GhostSpend's audit will trigger Bash tool approval prompts for
 commands like `find`, `claude mcp list`, and `ccusage` on first use. If the
 user wants to reduce prompt friction for future runs, show them the
@@ -76,6 +86,7 @@ but let them decide whether to add it — do not edit their settings file
 without explicit confirmation.
 
 ### Step 6 — Hand off
+
 Once config is written, tell the user setup is complete and that running
 `/gs-audit` (or the `ghostspend-audit` skill directly) will now compare
 findings against their known-tools baseline automatically.

@@ -18,7 +18,7 @@ redacted to remove personal service URLs and domain names (replaced with
   "rtk_installed": true,
   "setup_completed_at": "2026-09-11T21:26:20Z"
 }
-```
+```text
 
 Note: `codex` and `gemini` were detected on disk during setup but the user
 answered "no" when asked if they actively use them — so they are **not**
@@ -27,7 +27,7 @@ against.
 
 ## 2. Full Audit Run
 
-```
+```text
 $ ./scripts/ghostspend.sh
 
 == 0. GhostSpend configuration ==
@@ -93,7 +93,7 @@ FLAGGED: Unexpected usage from: codex gemini
   2. Review the combined ccusage report above for spend attributed to tools outside your known-tools baseline.
 
 Done. Re-run after applying fixes to confirm they took effect.
-```
+```text
 
 ## 3. What This Demonstrates
 

@@ -15,7 +15,7 @@ Most usage trackers show you a number. GhostSpend asks *"did you expect this?"* 
 ## What It Checks
 
 | # | Check | Why it matters |
-|---|---|---|
+| --- | --- | --- |
 | 1 | Global hooks (`~/.claude/settings.json`) | Hooks firing on every tool call add overhead |
 | 2 | MCP server connectivity (`claude mcp list`) | Failed/duplicated servers indicate stale config |
 | 3 | Plugin build integrity | Cached plugins shipped as TypeScript source sometimes never get built, causing silent connection failures every session |
@@ -38,7 +38,7 @@ Most usage trackers show you a number. GhostSpend asks *"did you expect this?"* 
 These are the only things you need *before* cloning and running setup — everything else (`ccusage`, `rtk`) is detected and offered for install interactively by `setup.sh`, so it isn't duplicated here.
 
 | Requirement | Why | Install command (if missing) |
-|---|---|---|
+| --- | --- | --- |
 | `git` | To clone the repo | macOS: `xcode-select --install` · Debian/Ubuntu: `sudo apt install git` |
 | `bash` | Runs the scripts (3.2+ is fine — no upgrade needed on macOS) | Pre-installed on macOS and Linux |
 | `node` + `npm` | Required by `ccusage` (and `rtk`, optional) | macOS: `brew install node` · Debian/Ubuntu: `sudo apt install nodejs npm` · or [nodejs.org](https://nodejs.org) |
@@ -55,16 +55,16 @@ git clone https://github.com/danmackenzie/ghostspend.git
 mkdir -p ~/.claude/plugins/ghostspend
 cp -r ghostspend/* ~/.claude/plugins/ghostspend/
 chmod +x ~/.claude/plugins/ghostspend/scripts/*.sh
-```
+```bash
 
 Restart Claude Code, then run `/gs-setup` once, followed by `/gs-audit` any time.
 
 Once published to a marketplace:
 
-```
+```bash
 /plugin marketplace add danmackenzie/ghostspend
 /plugin install ghostspend
-```
+```bash
 
 ### Option B: Standalone scripts (no Claude Code required)
 
@@ -74,7 +74,7 @@ cd ghostspend/scripts
 chmod +x setup.sh ghostspend.sh
 ./setup.sh
 ./ghostspend.sh
-```
+```bash
 
 `setup.sh` will check for `ccusage` and offer to run `npm install -g ccusage` for you if it's missing — you don't need to do this manually first.
 
@@ -82,10 +82,10 @@ chmod +x setup.sh ghostspend.sh
 
 **Inside Claude Code:**
 
-```
+```bash
 /gs-setup
 /gs-audit
-```
+```bash
 
 Or just ask: *"Run a GhostSpend audit across all my AI tools."* The `ghostspend-orchestrator` agent handles running setup first if needed, then the audit, then presents one consolidated report with flagged findings at the top.
 
@@ -95,7 +95,7 @@ Or just ask: *"Run a GhostSpend audit across all my AI tools."* The `ghostspend-
 ./scripts/setup.sh                                             # one-time, interactive
 ./scripts/ghostspend.sh                                        # run any time after
 ./scripts/ghostspend.sh ~/Documents/GitHub "~/Documents/Claude Projects"
-```
+```bash
 
 Quote any path containing spaces. If you skip `setup.sh`, `ghostspend.sh` still works, just without unexpected-usage flagging.
 
@@ -104,7 +104,7 @@ To check a specific tool directly:
 ```bash
 ccusage codex daily
 ccusage gemini daily
-```
+```bash
 
 ## Troubleshooting
 
@@ -114,17 +114,16 @@ GhostSpend depends on [`ccusage`](https://www.npmjs.com/package/ccusage) for cro
 
 ```bash
 npm install -g ccusage
-```
+```bash
 
 Verify it worked:
 
 ```bash
 which ccusage
 ccusage --version
-```
+```bash
 
-**No usage data shows up for today**
-
+### No usage data shows up for today
 If you've hit a weekly or usage-window limit on Claude Code (or another provider), new API calls are blocked until the limit resets — meaning **no new spend is being recorded at all**, not that everything is suddenly efficient. A flat total right after hitting a cap doesn't mean a fix worked; it means data collection paused. Re-run the audit after your limit window resets for a meaningful comparison.
 
 **A tool shows up as detected but has $0 spend**
@@ -135,8 +134,7 @@ GhostSpend's tool detection checks for the *presence* of a tool's local config/d
 
 This means the tool has usage data but isn't in the `known_tools` array in `~/.ghostspend/config.json`. This is expected the first time you add a new tool to your workflow. Fix it by re-running `./scripts/setup.sh` (or `/gs-setup`) and answering `y` when asked about that tool, or by editing the config manually — see [`docs/config.md`](docs/config.md) for the exact schema.
 
-**Codex CLI spend numbers look approximate**
-
+### Codex CLI spend numbers look approximate
 This is expected, not a bug. Codex CLI has no native dollar-cost tracking; `ccusage`'s Codex figures are estimates derived from token counts against third-party pricing data (LiteLLM), not an OpenAI-confirmed bill. Treat Codex figures as directional, not exact, when making budget decisions.
 
 **`shellcheck: command not found`**
@@ -145,22 +143,20 @@ This only affects contributors modifying the scripts, not end users running them
 
 ```bash
 brew install shellcheck
-```
+```bash
 
-**Scripts fail with "permission denied"**
-
+### Scripts fail with "permission denied"
 Make sure the scripts are executable:
 
 ```bash
 chmod +x scripts/*.sh
-```
+```bash
 
 **Claude Code prompts for approval on every command**
 
 This is expected behavior, not a bug in GhostSpend. The plugin runs standard shell commands (`find`, `pgrep`, `claude mcp list`, etc.) through Claude Code's normal Bash tool — the same approval flow that applies to any command Claude Code runs on your behalf. GhostSpend does not request or need any special permission tier beyond what Claude Code already provides.
 
-**Windows**
-
+### Windows
 GhostSpend's scripts are bash-based and currently only tested on macOS and Linux. Windows users should run them inside WSL. Native Windows/PowerShell support is tracked in [`ROADMAP.md`](ROADMAP.md) — contributions welcome.
 
 ## Platform Notes
@@ -171,7 +167,7 @@ GhostSpend's scripts are bash-based and currently only tested on macOS and Linux
 
 ## Repository Structure
 
-```
+```bash
 ghostspend/
 ├── .claude-plugin/
 │   └── plugin.json                    # Plugin manifest
@@ -204,7 +200,7 @@ ghostspend/
 ├── package.json
 ├── marketplace.json
 └── README.md
-```
+```bash
 
 ### A note on CLAUDE.md and AGENTS.md
 

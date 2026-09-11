@@ -20,8 +20,8 @@ categories:
 ## Supported Versions
 
 | Version | Supported |
-|---|---|
-| 0.1.x | Yes |
+| :------ | :-------: |
+| 0.1.x   | Yes       |
 
 As a young project, only the latest released version receives security
 fixes. Please update before reporting an issue to confirm it still applies.
@@ -31,6 +31,7 @@ fixes. Please update before reporting an issue to confirm it still applies.
 **Do not open a public GitHub issue for security vulnerabilities.**
 
 Instead:
+
 1. Open a private security advisory via GitHub's "Report a vulnerability"
    feature on this repository (Security tab → Advisories → New draft
    security advisory), or
@@ -39,6 +40,7 @@ Instead:
    for details via a private channel.
 
 Please include:
+
 - The specific script, skill, or command involved
 - Steps to reproduce
 - The potential impact (what could go wrong, and for whom)

@@ -11,9 +11,11 @@ This file is personal to your machine and is never committed to a repository —
   "known_tools": ["claude-code"],
   "scan_dirs": ["~/Documents/GitHub"]
 }
-```
+```json
+
 ~/.ghostspend/config.json
-```
+
+```json
 
 ## Schema
 
@@ -27,12 +29,12 @@ This file is personal to your machine and is never committed to a repository —
   "lastAuditAt": "2026-09-11T21:00:00Z",
   "ccusageInstalled": true
 }
-```
+```json
 
 ### Fields
 
 | Field | Type | Description |
-|---|---|---|
+| --- | --- | --- |
 | `knownTools` | array of strings | Tools you confirmed you actively use during setup. Anything detected on your system with usage data that is **not** in this list gets marked `[FLAGGED]` in audit output. |
 | `createdAt` | ISO 8601 string | Timestamp of initial setup. Not modified after creation. |
 | `lastAuditAt` | ISO 8601 string | Timestamp of the most recent `/gs-audit` run. Updated automatically each time the audit script completes. |
@@ -54,7 +56,7 @@ You can edit this file by hand if you want to adjust your known-tools baseline w
 
 ```bash
 open ~/.ghostspend/config.json   # macOS
-```
+```json
 
 Add the tool's identifier (from the recognized values list above) to the `knownTools` array and save. The next `/gs-audit` run will pick up the change immediately; no restart needed.
 
@@ -64,7 +66,7 @@ If you want to start over — for example, after a significant change to your to
 
 ```bash
 rm ~/.ghostspend/config.json
-```
+```json
 
 Then run `/gs-setup` again (or `scripts/setup.sh` directly) to rebuild it interactively.
 
