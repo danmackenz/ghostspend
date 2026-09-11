@@ -6,6 +6,11 @@ This file is personal to your machine and is never committed to a repository —
 
 ## Location
 
+```json
+{
+  "known_tools": ["claude-code"],
+  "scan_dirs": ["~/Documents/GitHub"]
+}
 ```
 ~/.ghostspend/config.json
 ```

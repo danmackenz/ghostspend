@@ -1,3 +1,4 @@
+# /gs-setup
 ---
 description: Run GhostSpend's first-time setup — checks/installs ccusage, records which AI CLI tools you actually use, and stores your project scan directories.
 ---

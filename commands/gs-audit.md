@@ -1,3 +1,4 @@
+# /gs-audit
 ---
 description: Run the full GhostSpend audit — hooks, MCP servers, plugin build health, project config drift, and cross-provider AI token spend, flagged against your known-tools baseline.
 ---
