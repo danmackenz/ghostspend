@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Run ShellCheck
         uses: ludeeus/action-shellcheck@master
         with:
@@ -23,6 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Check bash syntax
         run: |
           for f in scripts/*.sh; do
@@ -35,8 +37,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
       - name: Lint Markdown files
-        uses: DavidAnson/markdownlint-cli2-action@v16
+        uses: DavidAnson/markdownlint-cli2-action@v17
         with:
           globs: |
             skills/**/*.md
@@ -56,14 +64,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
       - name: Validate plugin.json
         run: |
           python3 -c "import json; json.load(open('.claude-plugin/plugin.json'))"
           echo "plugin.json is valid JSON"
+
       - name: Validate marketplace.json
         run: |
           python3 -c "import json; json.load(open('marketplace.json'))"
           echo "marketplace.json is valid JSON"
+
       - name: Validate package.json
         run: |
           python3 -c "import json; json.load(open('package.json'))"

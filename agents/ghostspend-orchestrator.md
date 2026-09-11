@@ -14,9 +14,11 @@ is combined and presented.
 ## Decision Logic
 
 1. **Check for existing configuration.**
-   ```
+
+   ```bash
    test -f ~/.ghostspend/config.json && echo EXISTS || echo MISSING
    ```
+
    - If `MISSING`: this is a first run. Invoke the `ghostspend-setup` skill
      before anything else. Do not skip this even if the user asked directly
      for an audit — an audit without a known-tools baseline cannot reliably
@@ -31,7 +33,7 @@ is combined and presented.
 
 3. **Cross-reference audit findings against the user's known-tools list.**
    Read `known_tools` from `~/.ghostspend/config.json`. For every tool
-   `ccusage daily` reports spend for for that is NOT in that list, elevate
+   `ccusage daily` reports spend for that is NOT in that list, elevate
    it to the top of your final report as a **flagged finding**, not a
    routine line item. This is the single highest-value output GhostSpend
    produces — do not bury it.
