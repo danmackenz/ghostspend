@@ -154,7 +154,6 @@ check passed without running it.
    the severity table in `docs/gs-fix-dev-plan.md` so `/gs-fix` (once
    built) handles it correctly — even before `/gs-fix` itself exists.
 
-
 ### Fixing a bug in a script
 
 1. Reproduce the failure by running the script yourself.
@@ -204,6 +203,7 @@ check passed without running it.
 ## Completion checklist
 
 Before reporting a change as done:
+
 - [ ] `shellcheck scripts/*.sh` passes with zero warnings (if scripts changed)
 - [ ] The modified script or skill was actually run/invoked, not just edited
 - [ ] `.claude-plugin/plugin.json` still lists every actual component file

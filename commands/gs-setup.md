@@ -1,7 +1,8 @@
+---
+description: Run first-time GhostSpend setup — detect installed AI CLI tools and record your known-tools baseline
+---
+
 # /gs-setup
----
-description: Run GhostSpend's first-time setup — checks/installs ccusage, records which AI CLI tools you actually use, and stores your project scan directories.
----
 
 Run the `ghostspend-setup` skill's full procedure now:
 

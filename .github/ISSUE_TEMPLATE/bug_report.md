@@ -10,7 +10,7 @@ A clear, concise description of what went wrong.
 
 ### Command run
 
-```
+```text
 paste the exact command or /slash-command you ran
 ```
 
