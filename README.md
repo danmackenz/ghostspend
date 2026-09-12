@@ -1,12 +1,4 @@
-# GhostSpend
-
-<p align="center">
-  <img
-    src="docs/assets/ghostspend-icon.png"
-    alt="GhostSpend logo"
-    width="96"
-  />
-</p>
+# <img src="docs/assets/ghostspend-icon.png" alt="GhostSpend logo" width="32" align="center"/> GhostSpend
 
 Find the AI spend you didn't know you had — and the exact steps to fix it.
 
