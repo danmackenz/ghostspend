@@ -55,16 +55,24 @@ git clone https://github.com/danmackenz/ghostspend.git
 mkdir -p ~/.claude/plugins
 cp -r ghostspend ~/.claude/plugins/ghostspend
 chmod +x ~/.claude/plugins/ghostspend/scripts/*.sh
-```bash
+```
 
 Restart Claude Code, then run `/gs-setup` once, followed by `/gs-audit` any time.
 
-Once published to a marketplace:
+Once published to a marketplace, you can add it either from the terminal inside Claude Code:
 
 ```bash
 /plugin marketplace add danmackenz/ghostspend
 /plugin install ghostspend
-```bash
+```
+
+...or from the Claude Desktop app GUI:
+
+1. Open Claude Code inside Claude Desktop.
+2. Go to **Settings → Plugins → Add → Add marketplace**.
+3. Choose **Add from a repository** (syncs a plugin marketplace from a GitHub repository or Git URL).
+4. Paste the GhostSpend Git repository URL.
+5. Click **Sync**.
 
 ### Option B: Standalone scripts (no Claude Code required)
 
@@ -74,7 +82,7 @@ cd ghostspend/scripts
 chmod +x setup.sh ghostspend.sh
 ./setup.sh
 ./ghostspend.sh
-```bash
+```
 
 `setup.sh` will check for `ccusage` and offer to run `npm install -g ccusage` for you if it's missing — you don't need to do this manually first.
 
@@ -85,7 +93,7 @@ chmod +x setup.sh ghostspend.sh
 ```bash
 /gs-setup
 /gs-audit
-```bash
+```
 
 Or just ask: *"Run a GhostSpend audit across all my AI tools."* The `ghostspend-orchestrator` agent handles running setup first if needed, then the audit, then presents one consolidated report with flagged findings at the top.
 
@@ -95,7 +103,7 @@ Or just ask: *"Run a GhostSpend audit across all my AI tools."* The `ghostspend-
 ./scripts/setup.sh                                             # one-time, interactive
 ./scripts/ghostspend.sh                                        # run any time after
 ./scripts/ghostspend.sh ~/Documents/GitHub "~/Documents/Claude Projects"
-```bash
+```
 
 Quote any path containing spaces. If you skip `setup.sh`, `ghostspend.sh` still works, just without unexpected-usage flagging.
 
@@ -104,7 +112,7 @@ To check a specific tool directly:
 ```bash
 ccusage codex daily
 ccusage gemini daily
-```bash
+```
 
 ## Troubleshooting
 
@@ -114,14 +122,14 @@ GhostSpend depends on [`ccusage`](https://www.npmjs.com/package/ccusage) for cro
 
 ```bash
 npm install -g ccusage
-```bash
+```
 
 Verify it worked:
 
 ```bash
 which ccusage
 ccusage --version
-```bash
+```
 
 ### No usage data shows up for today
 If you've hit a weekly or usage-window limit on Claude Code (or another provider), new API calls are blocked until the limit resets — meaning **no new spend is being recorded at all**, not that everything is suddenly efficient. A flat total right after hitting a cap doesn't mean a fix worked; it means data collection paused. Re-run the audit after your limit window resets for a meaningful comparison.
@@ -143,14 +151,14 @@ This only affects contributors modifying the scripts, not end users running them
 
 ```bash
 brew install shellcheck
-```bash
+```
 
 ### Scripts fail with "permission denied"
 Make sure the scripts are executable:
 
 ```bash
 chmod +x scripts/*.sh
-```bash
+```
 
 **Claude Code prompts for approval on every command**
 
@@ -200,7 +208,7 @@ ghostspend/
 ├── package.json
 ├── marketplace.json
 └── README.md
-```bash
+```
 
 ### A note on CLAUDE.md and AGENTS.md
 

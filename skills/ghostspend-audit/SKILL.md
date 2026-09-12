@@ -61,7 +61,7 @@ is not inherently a red flag — check `<tool> --version` / `--help` first.
 ```bash
 cat ~/.claude/settings.json | grep -A 5 hooks
 find <project_parent_dirs> -maxdepth 4 -path "*/.claude/settings.json" -exec cat {} \;
-```bash
+```
 
 Hooks merge across global and project scope; a project-local hook does not
 replace a global one. Flag only broad-matcher `PreToolUse` hooks with no
@@ -71,7 +71,7 @@ clear purpose.
 
 ```bash
 claude mcp list
-```bash
+```
 
 Categorize: `Needs authentication` (inert, low priority), `CONNECTION_CLOSED`
 (likely local process crash, see Step 4), auth/config errors (often a
@@ -86,7 +86,7 @@ source. Check `package.json` for a `build` script, then, with confirmation:
 
 ```bash
 cd /path/to/plugin && npm install && npm run build
-```bash
+```
 
 This fix is global if the plugin cache is shared across projects (it
 typically is).
@@ -96,7 +96,7 @@ typically is).
 ```bash
 find <parent_dir> -maxdepth 4 -path "*/.claude/settings.json"
 find <parent_dir> -maxdepth 3 -iname ".mcp.json" -not -path "*/node_modules/*"
-```bash
+```
 
 Use `scan_dirs` from `~/.ghostspend/config.json` if present; otherwise ask
 the user directly rather than guessing at a default layout.
@@ -108,7 +108,7 @@ report with no source restriction:
 
 ```bash
 ccusage daily
-```bash
+```
 
 This surfaces every locally-detected AI CLI tool (Claude Code, Codex CLI,
 Gemini CLI, GitHub Copilot CLI, OpenCode, Amp, Droid, Qwen, Grok Build CLI,
@@ -122,7 +122,7 @@ Drill into any flagged tool specifically:
 ```bash
 ccusage codex daily
 ccusage gemini daily
-```bash
+```
 
 If `rtk` is installed, its `cc-economics` command gives a faster
 Claude-Code-only view but never substitutes for the combined `ccusage`

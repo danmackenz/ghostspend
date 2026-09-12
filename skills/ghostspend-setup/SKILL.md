@@ -27,14 +27,14 @@ the user to re-explain their setup each time.
 command -v ccusage >/dev/null 2>&1 && echo "ccusage: installed" || echo "ccusage: MISSING"
 command -v claude >/dev/null 2>&1 && echo "claude: installed" || echo "claude: MISSING"
 command -v rtk >/dev/null 2>&1 && echo "rtk: installed (optional)" || echo "rtk: not installed (optional)"
-```bash
+```
 
 If `ccusage` is missing, ask the user for confirmation before installing —
 this is a global npm install and should not happen silently:
 
 ```bash
 npm install -g ccusage
-```bash
+```
 
 If the user declines, note that the audit skill will fall back to
 `npx ccusage`, which works but is slower on every run.
@@ -43,7 +43,7 @@ If the user declines, note that the audit skill will fall back to
 
 ```bash
 ls -d ~/.codex ~/.gemini ~/.config/opencode ~/.claude 2>/dev/null
-```bash
+```
 
 Present whatever is found to the user as a checklist-style question: "I
 found local data for: Claude Code, Codex CLI. Which of these do you
@@ -74,7 +74,7 @@ since this is a new file on their system):
   "rtk_installed": true,
   "setup_completed_at": "<ISO 8601 timestamp>"
 }
-```bash
+```
 
 ### Step 5 — Suggest (don't apply) permission pre-approval
 
@@ -87,12 +87,14 @@ without explicit confirmation.
 
 ### Step 6 — Hand off
 
-Once config is written, tell the user setup is complete and that running
-`/gs-audit` (or the `ghostspend-audit` skill directly) will now compare
-findings against their known-tools baseline automatically.
+Once config is written (or confirmed as unchanged), ask the user directly: "GhostSpend setup complete. Ready to run an audit? (yes/no)" Keep the command name out of the visible question — this is a plain yes/no prompt, not a suggestion to type a command.
+
+- If the user answers **yes**, invoke the `ghostspend-audit` skill immediately in the background. Do not wait for the user to separately run `/gs-audit`.
+- If the user answers **no**, confirm that `/gs-audit` remains available any time they're ready, and end the setup skill there.
 
 ## Output Format
 
 A short confirmation summary: what was installed, what tools were marked
 as known vs. unknown, what directories will be scanned, and where the
-config file now lives.
+config file now lives — followed by the yes/no audit prompt described in
+Step 6.
