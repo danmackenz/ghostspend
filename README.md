@@ -1,6 +1,16 @@
-# 👻 GhostSpend
+<p align="center">
+  <img
+    src="docs/assets/ghostspend-icon.svg"
+    alt="GhostSpend logo"
+    width="96"
+  />
+</p>
 
-Find the AI spend you didn't know you had — and the exact steps to fix it.
+<h1 align="center">GhostSpend</h1>
+
+<p align="center">
+  Find the AI spend you didn't know you had — and the exact steps to fix it.
+</p>
 
 GhostSpend audits your entire AI CLI toolchain (Claude Code, Codex, Gemini CLI, Copilot, and more) for hidden cost leaks: misfiring hooks, dead or duplicated MCP servers, unbuilt plugins, config drift across projects, and spend from tools you didn't realize were running. It doesn't just report a number — it flags what's unexpected and tells you precisely what to run to fix it.
 
