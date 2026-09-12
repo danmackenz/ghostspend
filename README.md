@@ -1,6 +1,6 @@
 <p align="center">
   <img
-    src="docs/assets/ghostspend-icon.svg"
+    src="docs/assets/ghostspend-icon.png"
     alt="GhostSpend logo"
     width="96"
   />
