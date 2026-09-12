@@ -5,10 +5,10 @@
   "description": "Finds and fixes hidden AI CLI token/cost leakage — across Claude Code, Codex CLI, Gemini CLI, and other tools — from misconfigured hooks, dead MCP servers, broken plugin builds, and project config drift.",
   "author": {
     "name": "Dan Mackenzie",
-    "url": "https://github.com/danmackenzie"
+    "url": "https://github.com/danmackenz"
   },
   "license": "MIT",
-  "homepage": "https://github.com/danmackenzie/ghostspend",
+  "homepage": "https://github.com/danmackenz/ghostspend",
   "keywords": [
     "claude-code",
     "token-usage",

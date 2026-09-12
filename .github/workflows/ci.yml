@@ -80,7 +80,7 @@ jobs:
 
           files = [
               Path(".claude-plugin/plugin.json"),
-              Path("marketplace.json"),
+              Path(".claude-plugin/marketplace.json"),
               Path("package.json"),
           ]
 

@@ -51,9 +51,9 @@ Contributors modifying the scripts also need `shellcheck` (`brew install shellch
 ### Option A: As a Claude Code plugin (recommended)
 
 ```bash
-git clone https://github.com/danmackenzie/ghostspend.git
-mkdir -p ~/.claude/plugins/ghostspend
-cp -r ghostspend/* ~/.claude/plugins/ghostspend/
+git clone https://github.com/danmackenz/ghostspend.git
+mkdir -p ~/.claude/plugins
+cp -r ghostspend ~/.claude/plugins/ghostspend
 chmod +x ~/.claude/plugins/ghostspend/scripts/*.sh
 ```bash
 
@@ -62,14 +62,14 @@ Restart Claude Code, then run `/gs-setup` once, followed by `/gs-audit` any time
 Once published to a marketplace:
 
 ```bash
-/plugin marketplace add danmackenzie/ghostspend
+/plugin marketplace add danmackenz/ghostspend
 /plugin install ghostspend
 ```bash
 
 ### Option B: Standalone scripts (no Claude Code required)
 
 ```bash
-git clone https://github.com/danmackenzie/ghostspend.git
+git clone https://github.com/danmackenz/ghostspend.git
 cd ghostspend/scripts
 chmod +x setup.sh ghostspend.sh
 ./setup.sh
