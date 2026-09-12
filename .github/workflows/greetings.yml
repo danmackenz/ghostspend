@@ -1,0 +1,33 @@
+mkdir -p .github/workflows
+cat > .github/workflows/greetings.yml << 'EOF'
+name: Greetings
+
+on: [pull_request_target, issues]
+
+jobs:
+  greeting:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/first-interaction@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          issue-message: >
+            Thanks for opening your first issue on GhostSpend! One thing
+            that helps a lot: if this relates to unexpected or flagged spend,
+            include your `~/.ghostspend/config.json` `known_tools` list (redact
+            anything sensitive) and the relevant `ccusage` output — it's the
+            fastest way for us to reproduce what you're seeing. Check
+            [`CONTRIBUTING.md`](https://github.com/danmackenz/ghostspend/blob/main/CONTRIBUTING.md)
+            if you're not sure whether this belongs here or in
+            [Discussions](https://github.com/danmackenz/ghostspend/discussions).
+          pr-message: >
+            Thanks for your first pull request to GhostSpend! A couple of
+            quick notes: the scripts need to stay bash 3.2-compatible (no
+            `mapfile`, no bash4+ features — stock macOS bash), and Markdown
+            changes should pass `markdownlint-cli2 --config .markdownlint-cli2.json`.
+            See [`CONTRIBUTING.md`](https://github.com/danmackenz/ghostspend/blob/main/CONTRIBUTING.md)
+            for the full checklist. A maintainer will review shortly.
+EOF
