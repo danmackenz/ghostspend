@@ -132,6 +132,7 @@ ccusage --version
 ```
 
 ### No usage data shows up for today
+
 If you've hit a weekly or usage-window limit on Claude Code (or another provider), new API calls are blocked until the limit resets — meaning **no new spend is being recorded at all**, not that everything is suddenly efficient. A flat total right after hitting a cap doesn't mean a fix worked; it means data collection paused. Re-run the audit after your limit window resets for a meaningful comparison.
 
 **A tool shows up as detected but has $0 spend**
@@ -143,6 +144,7 @@ GhostSpend's tool detection checks for the *presence* of a tool's local config/d
 This means the tool has usage data but isn't in the `known_tools` array in `~/.ghostspend/config.json`. This is expected the first time you add a new tool to your workflow. Fix it by re-running `./scripts/setup.sh` (or `/gs-setup`) and answering `y` when asked about that tool, or by editing the config manually — see [`docs/config.md`](docs/config.md) for the exact schema.
 
 ### Codex CLI spend numbers look approximate
+
 This is expected, not a bug. Codex CLI has no native dollar-cost tracking; `ccusage`'s Codex figures are estimates derived from token counts against third-party pricing data (LiteLLM), not an OpenAI-confirmed bill. Treat Codex figures as directional, not exact, when making budget decisions.
 
 **`shellcheck: command not found`**
@@ -154,6 +156,7 @@ brew install shellcheck
 ```
 
 ### Scripts fail with "permission denied"
+
 Make sure the scripts are executable:
 
 ```bash
@@ -165,6 +168,7 @@ chmod +x scripts/*.sh
 This is expected behavior, not a bug in GhostSpend. The plugin runs standard shell commands (`find`, `pgrep`, `claude mcp list`, etc.) through Claude Code's normal Bash tool — the same approval flow that applies to any command Claude Code runs on your behalf. GhostSpend does not request or need any special permission tier beyond what Claude Code already provides.
 
 ### Windows
+
 GhostSpend's scripts are bash-based and currently only tested on macOS and Linux. Windows users should run them inside WSL. Native Windows/PowerShell support is tracked in [`ROADMAP.md`](ROADMAP.md) — contributions welcome.
 
 ## Platform Notes
