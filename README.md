@@ -116,7 +116,7 @@ ccusage gemini daily
 
 ## Troubleshooting
 
-**"ccusage not installed" warning**
+### "ccusage not installed" warning
 
 GhostSpend depends on [`ccusage`](https://www.npmjs.com/package/ccusage) for cross-provider token/spend data. If you see a warning instead of numbers, install it globally so audits run faster and don't re-fetch it via `npx` every time:
 
@@ -135,7 +135,7 @@ ccusage --version
 
 If you've hit a weekly or usage-window limit on Claude Code (or another provider), new API calls are blocked until the limit resets — meaning **no new spend is being recorded at all**, not that everything is suddenly efficient. A flat total right after hitting a cap doesn't mean a fix worked; it means data collection paused. Re-run the audit after your limit window resets for a meaningful comparison.
 
-**A tool shows up as detected but has $0 spend**
+### A tool shows up as detected but has $0 spend
 
 GhostSpend's tool detection checks for the *presence* of a tool's local config/data directory (e.g. `~/.codex`, `~/.gemini`, `~/.config/opencode`), separately from whether `ccusage` reports any spend for it. A tool can be installed with no recent usage — this isn't an error, just a heads-up in case you forgot you installed it.
 
@@ -163,7 +163,7 @@ Make sure the scripts are executable:
 chmod +x scripts/*.sh
 ```
 
-**Claude Code prompts for approval on every command**
+### Claude Code prompts for approval on every command
 
 This is expected behavior, not a bug in GhostSpend. The plugin runs standard shell commands (`find`, `pgrep`, `claude mcp list`, etc.) through Claude Code's normal Bash tool — the same approval flow that applies to any command Claude Code runs on your behalf. GhostSpend does not request or need any special permission tier beyond what Claude Code already provides.
 
