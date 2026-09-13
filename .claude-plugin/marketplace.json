@@ -5,7 +5,7 @@
     "name": "Dan Mackenzie",
     "url": "https://github.com/danmackenz"
   },
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "GhostSpend plugin marketplace",
   "plugins": [
     {

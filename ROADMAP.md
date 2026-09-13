@@ -33,7 +33,7 @@ The single highest-value addition planned: turning GhostSpend from a *diagnose-o
 ## Later (Unscheduled)
 
 - [ ] **Windows support** — current scripts are bash/macOS-Linux only; a PowerShell port or WSL-based path is needed for Windows users
-- [ ] **More provider coverage** — expand beyond Claude Code, Codex CLI, Gemini CLI as `ccusage` (or equivalent tooling) adds support for more agentic CLIs
+- [ ] **More provider coverage** — expand beyond Claude Code, Codex CLI, Gemini CLI, and OpenCode as `ccusage` (or equivalent tooling) adds support for more agentic CLIs. GitHub Copilot CLI is advertised in `README.md`'s intro but has no detection branch in either script yet.
 - [ ] **Config file schema versioning** — as `~/.ghostspend/config.json` grows, add a `schemaVersion` field and migration handling so upgrades don't break existing configs
 - [ ] **`/gs-fix` execution history** — log which fixes were applied, when, and via which option chosen, feeding into historical trend tracking above
 - [ ] **Opt-in anonymized benchmarking** — let users optionally compare their spend/config patterns against anonymized aggregate data from other GhostSpend users (strictly opt-in, no default data collection — see `SECURITY.md`)
