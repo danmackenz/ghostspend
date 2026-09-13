@@ -34,13 +34,26 @@ git log --oneline -1        # confirm the base; line numbers assume 3eef4dd's co
 If `main` has moved past `3eef4dd`, re-check the cited line numbers before editing
 — the defects are real, but their positions may have shifted.
 
-**The two things most likely to trip you up:**
+**Things most likely to trip you up:**
 
 - `shellcheck` exits 0 on the current broken code, and `markdownlint` reports
   0 issues on the broken docs. **Neither tool gates the main defect classes in
   this plan.** Use the Gate 1 and Gate 2 commands in Verification instead.
 - Test on stock `/bin/bash` (3.2.57), not Homebrew bash. The headline bug only
   reproduces there.
+- **Never test `setup.sh` against the real `HOME`.** This machine already has
+  `~/.ghostspend/config.json`, so piped answers hit "Reconfigure?" first and the
+  script exits before reaching any code under test: a false pass, verified. Every
+  setup test in this plan uses a throwaway `HOME="$(mktemp -d)"`.
+- **Live plugin tests must load the working tree, not an installed copy.** The
+  enabled GhostSpend is the marketplace install (`ghostspend@ghostspend`, cached
+  at commit `2f9ac26`), and `~/.claude/plugins/ghostspend` exists but isn't
+  registered. Copying files into either tests old code. See Task 8 Step 6.
+- **The `github-advanced-security` check fails on every PR and is not yours to
+  fix.** GitHub's managed Copilot scanning agent requests `claude-opus-5`, and the
+  Copilot API answers `400 The requested model is not supported`. It is not a
+  required check. The required ones are Bash syntax check, Markdown lint,
+  Shellcheck, and Validate JSON manifests.
 
 **Decisions already made — do not relitigate:** polish ships before `/gs-fix`;
 `/gs-fix` stops at Phases 1–2 (Safest + Skip only); options are finding-type-aware;
@@ -92,6 +105,9 @@ as the plan assumes. Do not re-derive them; do re-run them if you change the cod
 | `dirname "${BASH_SOURCE[0]}"` under `set -u` | Task 2 Step 5a | resolves correctly |
 | `${e%%\|*}` / `${e#*\|}` / `tr '[:lower:]' '[:upper:]'` | Task 7 Step 3 | parses `severity\|message` correctly |
 | `"${empty[@]}"` under `set -u` | the bug being fixed | **fails** — `A[@]: unbound variable` |
+| real `scripts/setup.sh` at `3eef4dd`, throwaway `HOME` | Task 2 Steps 1 and 6 | fatal at line 102 with no tool dirs (exit 1); non-fatal at line 130 when every tool is declined (exit 0, `[]` by accident) |
+| `printf 'n\\nn\\n\\n' \| setup.sh` with a config already present | the test command this plan used to contain | exits at "Reconfigure?" and never reaches the crash, a false pass |
+| `claude --plugin-dir <path>` | Task 8 Step 6, Gate 4 | listed in `claude --help`: loads a plugin for one session only |
 
 Also confirmed: `shellcheck scripts/*.sh` exits **0** on the current, broken code,
 and `markdownlint-cli2` reports **0 issues** on a file with tagged closing fences.
@@ -107,7 +123,7 @@ A `ponytail-audit` complexity pass was also run; its findings are folded into Mi
 
 | # | Defect | Evidence |
 | --- | --- | --- |
-| 1 | **`setup.sh` crashes on bash 3.2** — `"${DETECTED[@]}"` and `"${KNOWN_TOOLS[@]}"` expand empty arrays under `set -u` | `/bin/bash 3.2.57` → `A[@]: unbound variable`. Reachable whenever the user answers `n` to every tool prompt: setup dies immediately before writing config. `shellcheck` exits 0. |
+| 1 | **`setup.sh` breaks on bash 3.2 empty-array expansion under `set -u`** — two sites, different severity | Reproduced against the real script with a throwaway `HOME`. **Fatal** when no AI-tool data directories exist: `line 102: DETECTED[@]: unbound variable`, exit 1, before the scan-dir prompt (a fresh standalone user). **Non-fatal** when every detected tool is declined: `line 130: KNOWN_TOOLS[@]: unbound variable` is printed mid-run, but only the `$(...)` subshell dies, so `"known_tools": []` still comes out right by accident. `shellcheck` exits 0 on both. |
 | 2 | **`package.json` bin + script point at a nonexistent file** — `./scripts/gs-setup.sh`; the file is `scripts/setup.sh` | `package.json:28,31`. `npm run setup` and the installed `ghostspend-setup` binary both fail. |
 | 3 | **Clone URL 404s** — real remote is `github.com/danmackenz/ghostspend`; `package.json` (3 places) and `CONTRIBUTING.md` say `danmackenzie` | `git remote -v` vs. `git grep github.com/danmackenzie` |
 | 4 | **`docs/config.md` renders mangled** — 5 fences closed with ` ```json ` instead of ` ``` ` | Lines 14, 18, 32, 59, 69. `markdownlint-cli2` reports 0 issues, so CI does not catch it. |
@@ -125,6 +141,7 @@ A `ponytail-audit` complexity pass was also run; its findings are folded into Mi
 | 16 | **`copilot-cli` is advertised but never detected** — named in README coverage and `docs/config.md` recognized values | `git grep -in copilot -- scripts/ skills/` → only a comment and prose, no detection branch |
 | 17 | **`examples/sample-audit-output.md` has tagged closing fences too** — a fence *parity* check calls it clean (4 fences, even) while it renders broken | Positional scan: lines 21 and 96 are odd-indexed fences carrying ` ```text ` |
 | 18 | **The worked example reproduces real audit figures** — `$443.41`, `$2.11`, dates `2026-08-03/04`, effectively the handover's real `$442.05` run | `examples/sample-audit-output.md:70-73`; `HANDOVER.md` Part 5 item 4 forbids this |
+| 19 | **README "Option A" manual install may not register the plugin**, *suspected; verify before editing README* | `~/.claude/plugins/ghostspend` (copied 2026-09-12 per Option A) is absent from `~/.claude/plugins/installed_plugins.json`, and `claude plugin details ghostspend` resolves only to the marketplace install `ghostspend@ghostspend`. Not yet tested with the marketplace copy disabled. |
 
 ### ponytail-audit findings (ranked, biggest cut first)
 
@@ -221,19 +238,43 @@ git commit -m "Add gs-fix dev plan referenced by five existing files"
 
 ### Task 2: Fix the bash 3.2 crash in `setup.sh`
 
-This is the ship-blocker. `shellcheck` passes today and will still pass after the fix, so the regression test is a direct bash 3.2 run — not shellcheck.
+The fatal path hits a fresh standalone user with no AI-tool data directories, which is exactly the "Option B, no Claude Code" audience README promises to support, so it blocks v0.1.0. `shellcheck` passes today and will still pass after the fix. The regression test is therefore a direct bash 3.2 run of the real script with a throwaway `HOME`, not shellcheck.
 
 **Files:**
 
 - Modify: `scripts/setup.sh`
 
-- [ ] **Step 1: Reproduce the crash**
+- [ ] **Step 1: Reproduce both failure sites against the real script**
+
+Always use a throwaway `HOME`. It makes tool detection deterministic, and it keeps
+the script away from the real `~/.ghostspend/config.json`, which would otherwise
+exit at "Reconfigure?" before reaching either bug.
 
 ```bash
-/bin/bash -c 'set -uo pipefail; A=(); for x in "${A[@]}"; do :; done; echo REACHED'
+# Fatal site: no AI-tool data directories at all
+H=$(mktemp -d); printf '\nn\nn\n' | HOME="$H" /bin/bash scripts/setup.sh; echo "exit=$?"
+
+# Non-fatal site: one tool detected, the user declines it
+H=$(mktemp -d); mkdir "$H/.codex"; printf 'n\n\nn\nn\n' | HOME="$H" /bin/bash scripts/setup.sh; echo "exit=$?"
 ```
 
-Expected: `/bin/bash: A[@]: unbound variable`, and `REACHED` is **not** printed.
+Expected key lines before the fix (verified 2026-09-13 at `3eef4dd`):
+
+```text
+[!] No known AI CLI tool data directories found.
+scripts/setup.sh: line 102: DETECTED[@]: unbound variable
+exit=1
+
+Found local data for: codex
+scripts/setup.sh: line 130: KNOWN_TOOLS[@]: unbound variable
+  "known_tools": [],
+Aborted. No config written.
+exit=0
+```
+
+The second case exits 0 and still prints `[]`, because the error kills only the
+`$(...)` subshell. It is still a bug: the error is visible to the user, and the
+correct output is an accident.
 
 - [ ] **Step 2: Guard the `DETECTED` loop**
 
@@ -356,14 +397,30 @@ hides the output the user just said yes to seeing. Drop the two words:
 `commands/gs-setup.md:7` carries the same phrasing — fix both. Verify in the live
 session (Gate 4) that answering yes produces visible audit output inline.
 
-- [ ] **Step 6: Verify the crash paths are gone under real bash 3.2**
+- [ ] **Step 6: Verify both failure sites and both dead-ends are fixed under real bash 3.2**
+
+Re-run Step 1's two commands, plus the existing-config path that Step 5a changed:
 
 ```bash
 /bin/bash -n scripts/setup.sh && echo "syntax OK"
-printf 'n\nn\n\n' | /bin/bash scripts/setup.sh
+
+# 1 and 2: the Step 1 scenarios
+H=$(mktemp -d); printf '\nn\nn\n' | HOME="$H" /bin/bash scripts/setup.sh; echo "exit=$?"
+H=$(mktemp -d); mkdir "$H/.codex"; printf 'n\n\nn\nn\n' | HOME="$H" /bin/bash scripts/setup.sh; echo "exit=$?"
+
+# 3: existing config, decline reconfigure, decline audit
+H=$(mktemp -d); mkdir -p "$H/.ghostspend"; echo '{}' > "$H/.ghostspend/config.json"
+printf 'n\nn\n' | HOME="$H" /bin/bash scripts/setup.sh; echo "exit=$?"
 ```
 
-Expected: reaches the "Config to be written:" preview with `"known_tools": []` and exits cleanly at the write prompt — **no** `unbound variable`. Answer `n` at the final prompt so nothing is written.
+Expected:
+
+- Scenarios 1 and 2: **no** `unbound variable` anywhere. Both reach the
+  "Config to be written:" preview with `"known_tools": []`, print
+  `Aborted. No config written.` (followed by Step 5a's audit prompt), and exit 0.
+- Scenario 3: prints `Keeping existing config.`, then asks `Run an audit now?`
+  instead of printing `Exiting.`, and exits 0 after the second `n`.
+- No scenario writes a config under `$H`, and none can touch the real one.
 
 - [ ] **Step 7: Verify shellcheck still clean**
 
@@ -378,8 +435,9 @@ git add scripts/setup.sh skills/ghostspend-setup/SKILL.md commands/gs-setup.md
 git commit -m "Guard empty array expansion that crashed setup on bash 3.2
 
 Stock macOS bash 3.2 treats \"\${arr[@]}\" on an empty array as an unbound
-variable under set -u. Declining every tool prompt killed setup before it
-could write a config. shellcheck does not detect this.
+variable under set -u. With no AI-tool data directories, setup died before
+the scan-dir prompt; declining every detected tool printed the error mid-run
+and produced the right JSON only by accident. shellcheck detects neither.
 
 Also closes the two dead-end exits where setup stopped instead of offering
 an audit, bringing the standalone script in line with the skill, and drops
@@ -650,6 +708,22 @@ Row 5 (spend via `ccusage`) is accurate as written, because `ccusage` does that
 work. Row 6 (unexpected-tool flagging) is not. Amend row 6 to name the tools
 actually flagged — `codex`, `gemini`, `opencode` — and move broader provider
 coverage to `ROADMAP.md`'s existing "More provider coverage" entry.
+
+- [ ] **Step 5b: Verify the README "Option A" install, and fix it only if it fails**
+
+Defect 19 is suspected, not proven. Test it in isolation, because the enabled
+marketplace copy would mask the result:
+
+```bash
+claude --settings '{"enabledPlugins":{"ghostspend@ghostspend":false}}'
+```
+
+In that session, check whether `/gs-setup` exists and whether its
+`Base directory for this skill:` line points at `~/.claude/plugins/ghostspend`.
+If it does, Option A works: leave README alone and strike defect 19. If it does
+not, replace Option A with a method you have watched load (the marketplace flow, or
+`claude --plugin-dir /path/to/ghostspend` from Task 8 Step 6). Never document an
+install path you have not seen work.
 
 - [ ] **Step 6: Verify every URL and path resolves**
 
@@ -1150,16 +1224,29 @@ Expected: `OK` for every component file, and both diff sets `none`.
 
 - [ ] **Step 6: Live-invoke the plugin — required, not optional**
 
-`CLAUDE.md` requires that skill/agent/command Markdown changes be exercised in a live Claude Code session, not just diffed:
+`CLAUDE.md` requires that skill/agent/command Markdown changes be exercised in a live Claude Code session, not just diffed.
+
+**Load the working tree directly. Do not copy files into `~/.claude/plugins/`.**
+On this machine the enabled GhostSpend is the marketplace install
+(`ghostspend@ghostspend`, cached at `~/.claude/plugins/cache/ghostspend/ghostspend/0.1.0`,
+commit `2f9ac26`), and `~/.claude/plugins/ghostspend` is an unregistered leftover.
+Copying into either one tests old code. `claude --plugin-dir` loads a plugin for a
+single session (it is listed in `claude --help`). Disable the same-named marketplace
+copy for that session only:
 
 ```bash
-mkdir -p ~/.claude/plugins/ghostspend
-rsync -a --exclude='.git' --exclude='.github' --exclude='CONTRIBUTING.md' --exclude='SECURITY.md' --exclude='CODE_OF_CONDUCT.md' \
-  ./ ~/.claude/plugins/ghostspend/
-chmod +x ~/.claude/plugins/ghostspend/scripts/*.sh
+claude --plugin-dir "$PWD" --settings '{"enabledPlugins":{"ghostspend@ghostspend":false}}'
 ```
 
-Restart Claude Code, then run `/gs-audit` followed by `/gs-fix`. Confirm by observation: `/gs-fix` appears in the command list; findings are presented critical-first; the unbuilt-plugin finding offers exactly Safest and Skip (not four options); choosing Safest prints `cd … && npm install && npm run build` and **waits** rather than executing. Decline it, and confirm nothing ran.
+**That `--settings` override is not yet verified**, so confirm which copy loaded
+before testing behavior. Invoke `/gs-setup`: the `Base directory for this skill:`
+line it prints must be this working tree, not `~/.claude/plugins/cache/...`. For
+Milestone B, `/gs-fix` must also appear, and `/gs-audit` must appear exactly once.
+If both copies load, or neither does, stop and ask the user. Do not run
+`claude plugin disable ghostspend@ghostspend` yourself, because that changes their
+settings permanently.
+
+Then run `/gs-audit` followed by `/gs-fix`. Confirm by observation: `/gs-fix` appears in the command list; findings are presented critical-first; the unbuilt-plugin finding offers exactly Safest and Skip (not four options); choosing Safest prints `cd … && npm install && npm run build` and **waits** rather than executing. Decline it, and confirm nothing ran.
 
 Report what was actually observed in the session, not the diff.
 
@@ -1213,22 +1300,31 @@ done; echo "(fence scan complete, rc=$rc)"
 
 ```bash
 /bin/bash --version | head -1   # must report 3.2.x
-printf 'n\nn\n\n' | /bin/bash scripts/setup.sh   # answer n at the write prompt
-/bin/bash scripts/ghostspend.sh "$HOME/Documents/GitHub"
+
+# setup.sh: throwaway HOME only (see Start here)
+O=$(mktemp)
+H=$(mktemp -d); printf '\nn\nn\n' | HOME="$H" /bin/bash scripts/setup.sh >>"$O" 2>&1
+H=$(mktemp -d); mkdir "$H/.codex"; printf 'n\n\nn\nn\n' | HOME="$H" /bin/bash scripts/setup.sh >>"$O" 2>&1
+grep 'unbound variable' "$O" && echo "FAIL: setup.sh" || echo "setup.sh: no unbound variable"
+
+# ghostspend.sh: read-only, so the real HOME is fine
+/bin/bash scripts/ghostspend.sh "$HOME/Documents/GitHub" >"$O" 2>&1
+grep 'unbound variable' "$O" && echo "FAIL: ghostspend.sh" || echo "ghostspend.sh: no unbound variable"
 ```
 
-Neither may print `unbound variable`. This is the check that catches the Task 2 class of defect; `shellcheck` returns 0 on the broken code.
+No run may print `unbound variable`. This is the check that catches the Task 2 class of defect. `shellcheck` returns 0 on the broken code, and running `setup.sh` against a real `HOME` that already has a config never reaches it.
 
 **Gate 3 — clean-checkout install (checklist §10):**
 
 ```bash
-git clone https://github.com/danmackenz/ghostspend.git /tmp/gs-verify
-cd /tmp/gs-verify && npm run setup
+D=$(mktemp -d)
+git clone --quiet --branch "$(git branch --show-current)" "$PWD" "$D/gs"   # this branch's committed state, no network
+( cd "$D/gs" && HOME="$(mktemp -d)" npm run setup </dev/null ) 2>&1 | tail -8
 ```
 
-Must reach the interactive setup rather than "no such file" — this is what the Task 5 `bin` fix exists to prove.
+It must print the `GhostSpend Setup` banner and end at `Aborted. No config written.`, not an `ENOENT` or "no such file" error. That is what the Task 5 `bin` fix exists to prove. Cloning from `origin` would test `main`, which keeps the broken path until this branch merges.
 
-**Gate 4 — live plugin session (required whenever `skills/`, `agents/`, or `commands/` change — that now includes Milestone A Task 2):** per Task 8 Step 6. Editing frontmatter and prose does not confirm a component loads or triggers; only invoking it does.
+**Gate 4 — live plugin session (required whenever `skills/`, `agents/`, or `commands/` change — that now includes Milestone A Task 2):** follow Task 8 Step 6. Load the working tree with `claude --plugin-dir`, never an installed copy, and confirm the `Base directory for this skill:` line points at it. Editing frontmatter and prose does not confirm a component loads or triggers; only invoking it does.
 
 For Milestone A specifically, confirm: `/gs-setup` against an **existing** config offers to continue into an audit rather than stopping, and answering yes produces visible audit output inline rather than silently backgrounding it.
 
