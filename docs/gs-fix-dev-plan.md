@@ -1,6 +1,6 @@
 # Dev Plan: `/gs-fix` Guided Remediation
 
-Status: Planned (v0.2.x). This document lives at `docs/gs-fix-dev-plan.md` and is the working spec referenced from `ROADMAP.md`. It should be updated as design decisions are made, not treated as frozen.
+Status: Phases 1-2 shipped in v0.2.0; Phases 3-5 planned. This document lives at `docs/gs-fix-dev-plan.md` and is the working spec referenced from `ROADMAP.md`. It should be updated as design decisions are made, not treated as frozen.
 
 ## 1. Goal
 
@@ -87,11 +87,11 @@ This table illustrates an important pattern: **for many finding types, options 1
 
 ## 7. Build Phases
 
-**Phase 1 — Severity tagging**
+**Phase 1 — Severity tagging — SHIPPED (v0.2.0)**
 Add severity classification to existing `/gs-audit` output. No new user-facing command yet. Validates the categorization logic against real findings before building the interview flow on top of it.
 
-**Phase 2 — `/gs-fix` skeleton, safe-fix-only**
-Ship `/gs-fix` supporting only Option 1 (Safest) and Option 3 (Skip) for a limited set of finding types (start with the two most common: unbuilt plugin, flagged tool). Prove the confirmation-gated execution flow works reliably before adding complexity.
+**Phase 2 — `/gs-fix` skeleton, safe-fix-only — SHIPPED (v0.2.0)**
+Ship `/gs-fix` supporting only Option 1 (Safest) and Option 3 (Skip) for a limited set of finding types (start with the two most common: unbuilt plugin, flagged tool). Prove the confirmation-gated execution flow works reliably before adding complexity. `ghostspend-orchestrator` also gained a basic third stage here (ask to proceed to remediation, hand off to `ghostspend-fix`) — the fuller chaining polish described in Phase 4 below is still open.
 
 **Phase 3 — Full 4-option interview flow**
 Add Option 2 (Balanced) and Option 4 (Other) across all finding types from the severity table. This is where the free-text boundary-checking logic needs the most testing.

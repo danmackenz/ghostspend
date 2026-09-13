@@ -12,17 +12,15 @@ This document tracks where GhostSpend is headed. It's intentionally short and pr
 
 ## Next (v0.2.x) — Guided Remediation: `/gs-fix`
 
-The single highest-value addition planned: turning GhostSpend from a *diagnose-only* tool into a *diagnose-and-guide-the-fix* tool, without ever taking destructive action without explicit, per-fix user approval.
+The single highest-value addition planned: turning GhostSpend from a *diagnose-only* tool into a *diagnose-and-guide-the-fix* tool, without ever taking destructive action without explicit, per-fix user approval. Shipped in phases — see `docs/gs-fix-dev-plan.md` for the full plan.
 
-- [ ] **`/gs-fix` command** — takes the most recent `/gs-audit` findings and walks the user through an interview-style remediation flow per finding, offering:
-  1. **Safest fix** (AI-recommended, lowest risk / most conservative)
-  2. **Balanced fix** (resolve critical + high severity, defer medium/low)
-  3. **Skip for now** (log as acknowledged, don't re-flag as new next time)
-  4. **Other** (free-text instruction, executed only within the tool's documented permission boundaries — see Security Constraints below)
-- [ ] **Severity classification** added to `/gs-audit` output — every finding gets tagged `critical` / `high` / `medium` / `low` so `/gs-fix` can group and prioritize
-- [ ] **`ghostspend-fix` skill** — encodes decision logic for translating a finding + chosen option into an actual proposed command (e.g. "flagged codex-cli usage" + "safest fix" → propose adding to `knownTools` only, since disabling codex-cli itself isn't GhostSpend's call to make unilaterally)
-- [ ] **Orchestrator update** — `ghostspend-orchestrator` gains a fourth stage after setup → audit → **fix**, so a user can ask once ("audit and fix my setup") and get the full guided flow
-- [ ] **Full dev plan**: see `docs/gs-fix-dev-plan.md` for architecture, phases, worked examples, and safety boundaries
+- [x] **Severity classification** added to `/gs-audit` output (Phase 1) — every finding is tagged `critical` / `high` / `medium` / `low` (encoded as `severity|message`) and the summary groups critical-first, so `/gs-fix` can prioritize.
+- [x] **`/gs-fix` command, safe-fix-only** (Phase 2) — walks findings critical-first, offering only **Safest** and **Skip** for two finding types (unbuilt plugin, flagged tool). Options are finding-type-aware; unsupported finding types are reported as needing manual follow-up rather than guessed at.
+- [x] **`ghostspend-fix` skill** — encodes decision logic for translating a finding + chosen option into an actual proposed command, shown to the user before it runs.
+- [x] **Orchestrator update** — `ghostspend-orchestrator` gains a third stage after setup → audit → **fix**, so a user can ask once ("audit and fix my setup") and get the guided flow for supported finding types.
+- [ ] **Full 4-option interview flow** (Phase 3) — add **Balanced** and **Other** (free-text, bounded to documented actions) across every finding type in the severity table, not just the two Phase 2 supports.
+- [ ] **Orchestrator chaining polish** (Phase 4) — a single request chains setup → audit → fix without re-confirming stages that already ran this session.
+- [ ] **Fix history + re-audit diffing** (Phase 5) — log applied fixes; show "resolved since last audit" on the next `/gs-audit` run.
 
 ## Next (v0.2.x) — Other Planned Checks
 
