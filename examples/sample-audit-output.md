@@ -62,15 +62,16 @@ ai-clarity-scanner: <redacted> (HTTP) - ✘ Failed to connect — Protected reso
 ╭────────────────────────────────────────────╮
 │  Coding (Agent) CLI Usage Report - Daily   │
 │     Detected: Claude, Codex, OpenCode      │
+│     (Illustrative figures — not real data) │
 ╰────────────────────────────────────────────╯
 
 ┌────────────┬───────────────┬────────────┬─────────────┐
 │ Date       │ Agent         │ ...        │  Cost (USD) │
 ├────────────┼───────────────┼────────────┼─────────────┤
-│ 2026-08-03 │ - Codex       │ gpt-5.6-terra │      $0.36 │
-│ 2026-08-04 │ - Codex       │ gpt-5.5, gpt-5.6-terra │ $2.11 │
-│ 2026-08-18 │ - OpenCode    │ big-pickle, etc. │    $0.28 │
-│ ...        │ - Claude      │ various       │  (full total: $443.41 across all tools) │
+│ 2025-06-01 │ - Codex       │ gpt-5.6-terra │      $1.50 │
+│ 2025-06-02 │ - Codex       │ gpt-5.5, gpt-5.6-terra │ $5.25 │
+│ 2025-06-15 │ - OpenCode    │ big-pickle, etc. │    $0.75 │
+│ ...        │ - Claude      │ various       │  (full total: $500.00 across all tools) │
 └────────────┴───────────────┴────────────┴─────────────┘
 WARN  Missing pricing for big-pickle; cost excludes this model.
 
@@ -88,9 +89,10 @@ WARN  Missing pricing for big-pickle; cost excludes this model.
 
 == Summary ==
 FLAGGED: Unexpected usage from: codex gemini
-2 issue(s) found:
-  1. 2 MCP server(s) failing — see list above for reasons (auth, config mismatch, missing build)
-  2. Review the combined ccusage report above for spend attributed to tools outside your known-tools baseline.
+3 issue(s) found:
+  [HIGH] 2 MCP server(s) failing — see list above for reasons (auth, config mismatch, missing build)
+  [HIGH] Codex CLI has local activity and is not in known_tools (codex)
+  [HIGH] Gemini CLI has local activity and is not in known_tools (gemini)
 
 Done. Re-run after applying fixes to confirm they took effect.
 ```
