@@ -52,8 +52,9 @@ Contributors modifying the scripts also need `shellcheck` (`brew install shellch
 
 ```bash
 git clone https://github.com/danmackenz/ghostspend.git
-mkdir -p ~/.claude/plugins
-cp -r ghostspend ~/.claude/plugins/ghostspend
+mkdir -p ~/.claude/plugins/ghostspend
+rsync -a --exclude='.git' --exclude='.github' --exclude='CONTRIBUTING.md' --exclude='SECURITY.md' --exclude='CODE_OF_CONDUCT.md' \
+  ghostspend/ ~/.claude/plugins/ghostspend/
 chmod +x ~/.claude/plugins/ghostspend/scripts/*.sh
 ```
 
