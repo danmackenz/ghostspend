@@ -979,7 +979,7 @@ Expected: every line shows `0.1.1`.
 
 - [ ] **Step 1c: Bring ROADMAP.md in line with what shipped**
 
-Check off `First public release (\`v0.1.0\`)` and note that it shipped on
+Check off ``First public release (`v0.1.0`)`` and note that it shipped on
 2026-09-12. Add a checked line for the v0.1.1 polish release beneath it.
 
 - [ ] **Step 2: Run the full CI gate locally**
