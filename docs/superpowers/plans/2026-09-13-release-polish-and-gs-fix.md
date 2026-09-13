@@ -1058,7 +1058,7 @@ Severity lives in `skills/ghostspend-audit/SKILL.md` as the documented source of
 
 - Produces: findings encoded as `"<severity>|<message>"` where severity ∈ `critical|high|medium|low`. Task 8's fix skill parses on the first `|`. Messages must not contain a leading `|`.
 
-- [ ] **Step 1: Add a `finding()` helper next to the existing output functions**
+- [x] **Step 1: Add a `finding()` helper next to the existing output functions**
 
 Alongside `ok()`/`warn()`/`fail()`/`flag()` at `scripts/ghostspend.sh:36-40`:
 
@@ -1067,7 +1067,7 @@ Alongside `ok()`/`warn()`/`fail()`/`flag()` at `scripts/ghostspend.sh:36-40`:
 finding() { FINDINGS+=("$1|$2"); }
 ```
 
-- [ ] **Step 2: Convert every `FINDINGS+=` call site**
+- [x] **Step 2: Convert every `FINDINGS+=` call site**
 
 Apply the spec §4 mapping:
 
@@ -1091,7 +1091,7 @@ Flagged tools stay in `FLAGGED_TOOLS` and are additionally recorded as findings 
 finding high "$label has local activity and is not in known_tools ($key)"
 ```
 
-- [ ] **Step 3: Group the Summary by severity, critical first**
+- [x] **Step 3: Group the Summary by severity, critical first**
 
 ```bash
 if [[ ${#FINDINGS[@]} -eq 0 ]]; then
@@ -1109,7 +1109,7 @@ fi
 
 `tr` rather than `${sev^^}` — parameter-expansion case conversion is bash 4 only.
 
-- [ ] **Step 3a: Refresh the worked example to the new Summary format**
+- [x] **Step 3a: Refresh the worked example to the new Summary format**
 
 `examples/sample-audit-output.md:89-93` reproduces the old Summary verbatim and
 goes stale twice over: Task 3 Step 3 deletes its finding #2 (the always-on
@@ -1129,7 +1129,7 @@ The flagged tools now appear as findings (Step 2), which is why the count rises
 even though the pseudo-finding was removed. Regenerate rather than hand-edit if
 possible — run the audit and paste real output, then scrub it per the next step.
 
-- [ ] **Step 3b: Confirm the example carries no real spend figures**
+- [x] **Step 3b: Confirm the example carries no real spend figures**
 
 `HANDOVER.md` Part 5 item 4 forbids baking one person's audit numbers into
 shipped documentation. The example currently shows `$443.41`, `$0.36`, `$2.11`,
@@ -1142,11 +1142,11 @@ under the heading stating the numbers are illustrative. Keep the *shape* of the
 output — the table, the model names' style, the `WARN Missing pricing` line —
 since that is what the example teaches.
 
-- [ ] **Step 4: Document the severity table in the audit skill**
+- [x] **Step 4: Document the severity table in the audit skill**
 
 Add a `## Severity Classification` section to `skills/ghostspend-audit/SKILL.md` after `## Output Format`, reproducing the spec §4 table and stating that it is the source of truth that `ghostspend-fix` reads — not something the fix skill re-derives.
 
-- [ ] **Step 5: Verify against a real environment on bash 3.2**
+- [x] **Step 5: Verify against a real environment on bash 3.2**
 
 ```bash
 shellcheck scripts/ghostspend.sh
@@ -1155,7 +1155,7 @@ shellcheck scripts/ghostspend.sh
 
 Expected: Summary lines are prefixed `[CRITICAL]` / `[HIGH]` / `[MEDIUM]` / `[LOW]` and appear in that order. Confirm at least one real finding from the current machine carries a plausible severity.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add scripts/ghostspend.sh skills/ghostspend-audit/SKILL.md examples/sample-audit-output.md

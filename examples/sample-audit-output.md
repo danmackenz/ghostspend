@@ -102,9 +102,9 @@ Done. Re-run after applying fixes to confirm they took effect.
 Two real findings came out of a single run that a Claude-only usage report
 would never have surfaced:
 
-- **Codex CLI spend on 2026-08-03 and 08-04** ($0.36 + $2.11) — small in
-  isolation, but invisible in every Claude-specific tool the user had
-  checked before running GhostSpend.
+- **Codex CLI spend on 2025-06-01 and 06-02** ($1.50 + $5.25, illustrative
+  figures) — small in isolation, but invisible in every Claude-specific tool
+  the user had checked before running GhostSpend.
 - **Gemini CLI flagged purely on presence** — `~/.gemini` exists on disk
   even though `ccusage` showed no billed activity for it in this window.
   GhostSpend still surfaces this, since a tool with no *recent* spend can
