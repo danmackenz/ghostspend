@@ -25,6 +25,13 @@ The single highest-value addition planned: turning GhostSpend from a *diagnose-o
 
 ## Next (v0.2.x) — Other Planned Checks
 
+- [ ] **Historical MCP failure detection** — the audit currently probes MCP
+  connectivity only at run time (`claude mcp list`). A server that fails and
+  retries for an extended period between audits, then happens to be connected
+  when the audit runs, is invisible. Scanning Claude Desktop/Code MCP logs for
+  repeated connection failures against the same server would catch these retry
+  storms. Also not covered today: long-lived VM keepalive loops, and orphaned
+  session-storage directories that never appear in the normal session list.
 - [ ] **Historical trend tracking** — store audit results over time (e.g. `~/.ghostspend/history/`) so users can see spend/config drift trends across weeks, not just a single point-in-time snapshot
 - [ ] **Oversized CLAUDE.md / AGENTS.md detection** — flag project instruction files above a line-count threshold, since these get re-sent as context on every turn and are an under-recognized cost driver
 - [ ] **Cron / launchd / scheduled task scanning** — detect background jobs that might be triggering AI CLI tools without the user's direct action (this came up directly from Dan's Codex/Haiku investigation)

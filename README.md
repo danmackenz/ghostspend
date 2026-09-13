@@ -32,6 +32,10 @@ Most usage trackers show you a number. GhostSpend asks *"did you expect this?"* 
 - **Codex CLI has no native dollar-cost tracking.** `ccusage`'s Codex figures are *estimates* from token counts against third-party pricing data (LiteLLM), not an OpenAI-confirmed bill. GhostSpend reports this distinction rather than presenting estimates as fact.
 - **Doesn't explain *why* a background tool ran.** It flags *that* a tool has unexpected spend and points toward likely causes (cron jobs, launchd agents, IDE extensions, notify hooks), but tracing the exact trigger is a manual follow-up.
 - **bash 3.2 compatible by design.** macOS ships bash 3.2 by default (no `mapfile`, no bash4+ features). Both scripts are deliberately written to run on stock macOS without requiring a Homebrew bash upgrade.
+- **MCP connectivity is checked at audit time only.** A server that failed
+  and retried repeatedly since your last audit, but is connected right now,
+  will not be flagged. GhostSpend does not currently read MCP logs — see
+  [`ROADMAP.md`](ROADMAP.md).
 
 ## Prerequisites
 
