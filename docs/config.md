@@ -6,49 +6,41 @@ This file is personal to your machine and is never committed to a repository —
 
 ## Location
 
-```json
-{
-  "known_tools": ["claude-code"],
-  "scan_dirs": ["~/Documents/GitHub"]
-}
-```json
-
-~/.ghostspend/config.json
-
-```json
+`~/.ghostspend/config.json`
 
 ## Schema
 
 ```json
 {
-  "knownTools": [
-    "claude-code",
-    "codex-cli"
-  ],
-  "createdAt": "2026-09-11T20:00:00Z",
-  "lastAuditAt": "2026-09-11T21:00:00Z",
-  "ccusageInstalled": true
+  "known_tools": ["claude-code", "codex"],
+  "scan_dirs": ["/Users/example/Documents/GitHub"],
+  "ccusage_installed": true,
+  "rtk_installed": false,
+  "setup_completed_at": "2026-09-13T20:00:00Z"
 }
-```json
+```
 
 ### Fields
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `knownTools` | array of strings | Tools you confirmed you actively use during setup. Anything detected on your system with usage data that is **not** in this list gets marked `[FLAGGED]` in audit output. |
-| `createdAt` | ISO 8601 string | Timestamp of initial setup. Not modified after creation. |
-| `lastAuditAt` | ISO 8601 string | Timestamp of the most recent `/gs-audit` run. Updated automatically each time the audit script completes. |
-| `ccusageInstalled` | boolean | Whether `ccusage` was detected as a global install at last check. If `false`, audit output will recommend `npm install -g ccusage` rather than silently falling back to `npx`. |
+| `known_tools` | array of strings | Tools you confirmed you actively use during setup. Anything detected with local activity that is **not** in this list is marked `[FLAGGED]` in audit output. Matched as a substring, so `codex` matches `codex`. |
+| `scan_dirs` | array of strings | Absolute parent directories searched for project-level `.claude/settings.json` and `.mcp.json` drift. Written expanded — `~` is resolved at setup time. |
+| `ccusage_installed` | boolean | Whether `ccusage` was on `PATH` at setup time. **Advisory only** — the audit re-checks `command -v ccusage` on every run and does not read this field. |
+| `rtk_installed` | boolean | Whether `rtk` was on `PATH` at setup time. **Advisory only**, same as above. |
+| `setup_completed_at` | ISO 8601 string | When setup last wrote this file. Not updated by audits. |
 
-### Recognized values for `knownTools`
+### Recognized values for `known_tools`
 
-Current detectable tools (see `scripts/ghostspend.sh` for the live detection list, since this expands over time — check `ROADMAP.md` for planned provider additions):
+These are the identifiers `scripts/setup.sh` actually writes:
 
 - `claude-code`
-- `codex-cli`
-- `gemini-cli`
-- `copilot-cli`
+- `codex`
+- `gemini`
 - `opencode`
+
+`copilot-cli` is listed in `README.md`'s provider coverage but is **not**
+currently detected by either script — see `ROADMAP.md`.
 
 ## Editing Manually
 
@@ -56,9 +48,9 @@ You can edit this file by hand if you want to adjust your known-tools baseline w
 
 ```bash
 open ~/.ghostspend/config.json   # macOS
-```json
+```
 
-Add the tool's identifier (from the recognized values list above) to the `knownTools` array and save. The next `/gs-audit` run will pick up the change immediately; no restart needed.
+Add the tool's identifier (from the recognized values list above) to the `known_tools` array and save. The next `/gs-audit` run will pick up the change immediately; no restart needed.
 
 ## Resetting Your Baseline
 
@@ -66,7 +58,7 @@ If you want to start over — for example, after a significant change to your to
 
 ```bash
 rm ~/.ghostspend/config.json
-```json
+```
 
 Then run `/gs-setup` again (or `scripts/setup.sh` directly) to rebuild it interactively.
 

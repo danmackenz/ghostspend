@@ -195,13 +195,13 @@ Keep both `yagni` fields but **document them as advisory-only** rather than dele
 
 - Create: `docs/gs-fix-dev-plan.md`
 
-- [ ] **Step 1: Copy the spec into the repo**
+- [x] **Step 1: Copy the spec into the repo**
 
 ```bash
 cp "$HOME/Documents/Claude Resources/Plugins/Personal Dev/Ghost Spend Versions/Dev Plans/gs-fix-dev-plan.md" docs/gs-fix-dev-plan.md
 ```
 
-- [ ] **Step 2: Record the two decisions made during planning**
+- [x] **Step 2: Record the two decisions made during planning**
 
 In §9 "Open Questions", replace the first bullet with the resolution, and add the standalone-script decision:
 
@@ -218,7 +218,7 @@ In §9 "Open Questions", replace the first bullet with the resolution, and add t
 
 Also strike `scripts/ghostspend-fix.sh (optional)` from the §3 component table.
 
-- [ ] **Step 3: Verify every inbound reference now resolves**
+- [x] **Step 3: Verify every inbound reference now resolves**
 
 ```bash
 git grep -l 'gs-fix-dev-plan' && test -f docs/gs-fix-dev-plan.md && echo RESOLVES
@@ -226,7 +226,7 @@ git grep -l 'gs-fix-dev-plan' && test -f docs/gs-fix-dev-plan.md && echo RESOLVE
 
 Expected: the 5 referencing files listed, then `RESOLVES`.
 
-- [ ] **Step 4: Verify markdown lints**
+- [x] **Step 4: Verify markdown lints**
 
 ```bash
 npx --yes markdownlint-cli2 --config .markdownlint-cli2.json "docs/gs-fix-dev-plan.md"
@@ -234,7 +234,7 @@ npx --yes markdownlint-cli2 --config .markdownlint-cli2.json "docs/gs-fix-dev-pl
 
 Expected: `0 issues`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add docs/gs-fix-dev-plan.md
@@ -251,7 +251,7 @@ The fatal path hits a fresh standalone user with no AI-tool data directories, wh
 
 - Modify: `scripts/setup.sh`
 
-- [ ] **Step 1: Reproduce both failure sites against the real script**
+- [x] **Step 1: Reproduce both failure sites against the real script**
 
 Always use a throwaway `HOME`. It makes tool detection deterministic, and it keeps
 the script away from the real `~/.ghostspend/config.json`, which would otherwise
@@ -283,7 +283,7 @@ The second case exits 0 and still prints `[]`, because the error kills only the
 `$(...)` subshell. It is still a bug: the error is visible to the user, and the
 correct output is an accident.
 
-- [ ] **Step 2: Guard the `DETECTED` loop**
+- [x] **Step 2: Guard the `DETECTED` loop**
 
 Replace the tool-confirmation block. The existing `if [[ ${#DETECTED[@]} -eq 0 ]]` only warns — it does not skip the loop below it.
 
@@ -297,7 +297,7 @@ if [[ ${#DETECTED[@]} -gt 0 ]]; then
 fi
 ```
 
-- [ ] **Step 3: Guard the JSON array builders**
+- [x] **Step 3: Guard the JSON array builders**
 
 `printf '"%s",' "${KNOWN_TOOLS[@]}"` has the same defect and is hit whenever the user declines every tool. Add a helper above the config-building section and use it for both arrays:
 
@@ -319,7 +319,7 @@ SCAN_DIRS_JSON=$(json_array ${SCAN_DIRS[@]+"${SCAN_DIRS[@]}"})
 
 The `${arr[@]+"${arr[@]}"}` form is the bash 3.2-safe way to pass a possibly-empty array.
 
-- [ ] **Step 4: Collapse the duplicated heredoc** (ponytail `shrink:`)
+- [x] **Step 4: Collapse the duplicated heredoc** (ponytail `shrink:`)
 
 Build the JSON once, show it, then write the same bytes — this also removes the risk of preview and written content drifting apart:
 
@@ -348,7 +348,7 @@ mkdir -p "$CONFIG_DIR"
 printf '%s\n' "$CONFIG_JSON" > "$CONFIG_FILE"
 ```
 
-- [ ] **Step 5: Fix the stale slash command**
+- [x] **Step 5: Fix the stale slash command**
 
 `scripts/setup.sh:169` — replace `/audit` with `/gs-audit`:
 
@@ -356,7 +356,7 @@ printf '%s\n' "$CONFIG_JSON" > "$CONFIG_FILE"
 echo -e "\n${BOLD}Setup complete.${RESET} Run ./ghostspend.sh (or /gs-audit in Claude Code) any time."
 ```
 
-- [ ] **Step 5a: Close the existing-config dead-end (HANDOVER Part 2 bug, script half)**
+- [x] **Step 5a: Close the existing-config dead-end (HANDOVER Part 2 bug, script half)**
 
 The continuation-prompt fix landed in `skills/ghostspend-setup/SKILL.md:88-93` and
 `commands/gs-setup.md:7`, but **not** in the standalone script. `scripts/setup.sh:37-38`
@@ -389,7 +389,7 @@ fi
 Apply the same two-line continuation before the `exit 0` at `scripts/setup.sh:152`
 (the "Aborted. No config written." path), so neither early exit dead-ends.
 
-- [ ] **Step 5b: Fix "in the background" in the setup skill's hand-off**
+- [x] **Step 5b: Fix "in the background" in the setup skill's hand-off**
 
 `skills/ghostspend-setup/SKILL.md:92` says to *"invoke the `ghostspend-audit`
 skill immediately **in the background**."* The audit is interactive — it asks
@@ -404,7 +404,7 @@ hides the output the user just said yes to seeing. Drop the two words:
 `commands/gs-setup.md:7` carries the same phrasing — fix both. Verify in the live
 session (Gate 4) that answering yes produces visible audit output inline.
 
-- [ ] **Step 6: Verify both failure sites and both dead-ends are fixed under real bash 3.2**
+- [x] **Step 6: Verify both failure sites and both dead-ends are fixed under real bash 3.2**
 
 Re-run Step 1's two commands, plus the existing-config path that Step 5a changed:
 
@@ -429,13 +429,13 @@ Expected:
   instead of printing `Exiting.`, and exits 0 after the second `n`.
 - No scenario writes a config under `$H`, and none can touch the real one.
 
-- [ ] **Step 7: Verify shellcheck still clean**
+- [x] **Step 7: Verify shellcheck still clean**
 
 ```bash
 shellcheck scripts/*.sh && echo "shellcheck clean"
 ```
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add scripts/setup.sh skills/ghostspend-setup/SKILL.md commands/gs-setup.md
@@ -464,7 +464,7 @@ Three defects in one file, all in the findings pipeline. Fixing them together be
 
 - Modify: `scripts/ghostspend.sh`
 
-- [ ] **Step 1: Scope the plugin-health OK message to its own section**
+- [x] **Step 1: Scope the plugin-health OK message to its own section**
 
 At `scripts/ghostspend.sh:130`, `${#FINDINGS[@]}` is global and may already hold an MCP finding from section 2. Use a section-local counter:
 
@@ -487,7 +487,7 @@ if [[ "$PLUGIN_ISSUES" -eq 0 ]]; then
 fi
 ```
 
-- [ ] **Step 2: Make the config-drift check actually produce a finding**
+- [x] **Step 2: Make the config-drift check actually produce a finding**
 
 Section 4 currently prints counts and stops, so it can never feed `/gs-fix`. Append a finding when a project carries local config, and name the files so the fix skill has something to act on:
 
@@ -508,7 +508,7 @@ for dir in "${SCAN_DIRS[@]}"; do
 done
 ```
 
-- [ ] **Step 3: Delete the always-on pseudo-finding** (ponytail `delete:`)
+- [x] **Step 3: Delete the always-on pseudo-finding** (ponytail `delete:`)
 
 Remove `scripts/ghostspend.sh:233` entirely:
 
@@ -518,7 +518,7 @@ FINDINGS+=("Review the combined ccusage report above for spend attributed to too
 
 It is a rubric, not a finding, and it makes the `ok "No other actionable issues found. Environment looks clean."` branch unreachable whenever ccusage runs.
 
-- [ ] **Step 4: Collapse the triplicated tool blocks** (ponytail `shrink:`)
+- [x] **Step 4: Collapse the triplicated tool blocks** (ponytail `shrink:`)
 
 Replace the three `DETECTED_TOOLS_*` blocks and the three flag blocks with one table-driven pass. Keep the `known_tools` substring match semantics unchanged:
 
@@ -555,7 +555,7 @@ if [[ -z "$KNOWN_TOOLS" ]]; then
 fi
 ```
 
-- [ ] **Step 5: Verify on bash 3.2 against a clean and a dirty environment**
+- [x] **Step 5: Verify on bash 3.2 against a clean and a dirty environment**
 
 ```bash
 /bin/bash -n scripts/ghostspend.sh && echo "syntax OK"
@@ -565,7 +565,7 @@ shellcheck scripts/ghostspend.sh && echo "shellcheck clean"
 
 Expected: sections 0–6 all render; section 3 prints its OK line even when section 2 reported a failing MCP server; the Summary no longer lists the generic "Review the combined ccusage report" item.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add scripts/ghostspend.sh
@@ -585,7 +585,7 @@ per-tool detection into one table-driven loop."
 
 - Modify: `docs/config.md`
 
-- [ ] **Step 1: Confirm the actual schema before writing**
+- [x] **Step 1: Confirm the actual schema before writing**
 
 ```bash
 grep -n 'known_tools\|scan_dirs\|ccusage_installed\|rtk_installed\|setup_completed_at' scripts/setup.sh scripts/ghostspend.sh
@@ -593,7 +593,7 @@ grep -n 'known_tools\|scan_dirs\|ccusage_installed\|rtk_installed\|setup_complet
 
 This is the source of truth. The current doc is what's wrong, not the scripts.
 
-- [ ] **Step 2: Replace the Location + Schema sections**
+- [x] **Step 2: Replace the Location + Schema sections**
 
 Close every fence with bare ` ``` `. Remove the duplicated/stray Location block entirely.
 
@@ -638,11 +638,11 @@ These are the identifiers `scripts/setup.sh` actually writes:
 currently detected by either script — see `ROADMAP.md`.
 ````
 
-- [ ] **Step 3: Fix the two remaining broken fences**
+- [x] **Step 3: Fix the two remaining broken fences**
 
 The "Editing Manually" and "Resetting Your Baseline" bash blocks both close with ` ```json `. Change both to ` ``` `. Also replace every remaining `knownTools` mention in prose with `known_tools`.
 
-- [ ] **Step 4: Verify rendering and lint**
+- [x] **Step 4: Verify rendering and lint**
 
 ```bash
 npx --yes markdownlint-cli2 --config .markdownlint-cli2.json "docs/config.md"
@@ -651,7 +651,7 @@ awk '/^```/{n++} END{print "fence count:", n, (n%2==0 ? "BALANCED" : "UNBALANCED
 
 Expected: `0 issues` and `BALANCED`. The fence count is the real check here — markdownlint reported 0 issues against the broken version too.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add docs/config.md
@@ -671,7 +671,7 @@ and closed the same way, mangling the page from the Location section down."
 
 - Modify: `package.json`, `.claude-plugin/marketplace.json`, `README.md`, `CONTRIBUTING.md`
 
-- [ ] **Step 1: Fix the broken bin and script paths**
+- [x] **Step 1: Fix the broken bin and script paths**
 
 `package.json` — `./scripts/gs-setup.sh` does not exist:
 
@@ -687,25 +687,25 @@ and closed the same way, mangling the page from the Location section down."
   },
 ```
 
-- [ ] **Step 2: Correct the repo owner in `package.json`**
+- [x] **Step 2: Correct the repo owner in `package.json`**
 
 The real remote is `github.com/danmackenz/ghostspend`. Change `homepage`, `repository.url`, and `bugs.url` from `danmackenzie` to `danmackenz`.
 
-- [ ] **Step 3: Correct the clone URL in `CONTRIBUTING.md`**
+- [x] **Step 3: Correct the clone URL in `CONTRIBUTING.md`**
 
 ```bash
 git clone https://github.com/danmackenz/ghostspend.git
 ```
 
-- [ ] **Step 4: Align the marketplace version**
+- [x] **Step 4: Align the marketplace version**
 
 `.claude-plugin/marketplace.json` declares `"version": "1.0.0"` at the marketplace level for a 0.1.0 project. Set it to match `plugin.json` and `package.json`, currently `"0.1.0"`. The file also has a per-plugin `version` (line 15). Task 6 bumps all of these to `"0.1.1"` together.
 
-- [ ] **Step 5: Fix the README structure diagram**
+- [x] **Step 5: Fix the README structure diagram**
 
 `README.md:214` lists `marketplace.json` at repo root. It lives at `.claude-plugin/marketplace.json` — move it under the `.claude-plugin/` entry alongside `plugin.json`, and add the `docs/gs-fix-dev-plan.md` entry now that Task 1 created it.
 
-- [ ] **Step 5a: Stop over-claiming `copilot-cli` coverage**
+- [x] **Step 5a: Stop over-claiming `copilot-cli` coverage**
 
 README's intro and "What It Checks" row 6 imply GitHub Copilot CLI is flagged
 against the baseline. Neither script has a detection branch for it — `git grep -in
@@ -716,7 +716,7 @@ work. Row 6 (unexpected-tool flagging) is not. Amend row 6 to name the tools
 actually flagged — `codex`, `gemini`, `opencode` — and move broader provider
 coverage to `ROADMAP.md`'s existing "More provider coverage" entry.
 
-- [ ] **Step 5b: Verify the README "Option A" install, and fix it only if it fails**
+- [ ] **Step 5b: Verify the README "Option A" install, and fix it only if it fails** — DEFERRED: requires an interactive `claude` session, which the executing agent could not drive from a non-interactive Bash tool. See handover note for the exact command.
 
 Defect 19 is suspected, not proven. Test it in isolation, because the enabled
 marketplace copy would mask the result:
@@ -732,7 +732,7 @@ not, replace Option A with a method you have watched load (the marketplace flow,
 `claude --plugin-dir /path/to/ghostspend` from Task 8 Step 6). Never document an
 install path you have not seen work.
 
-- [ ] **Step 6: Verify every URL and path resolves**
+- [x] **Step 6: Verify every URL and path resolves**
 
 ```bash
 git grep -n 'danmackenzie' || echo "no stale owner refs"
@@ -742,7 +742,7 @@ python3 -c "import json;[json.load(open(p)) for p in ['.claude-plugin/plugin.jso
 
 Expected: `no stale owner refs`, `OK` for both script paths, `JSON valid`.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add package.json .claude-plugin/marketplace.json README.md CONTRIBUTING.md
@@ -788,13 +788,13 @@ and this task stops both recurring.
 - Modify: `examples/sample-audit-output.md`
 - Modify: `.github/workflows/ci.yml`
 
-- [ ] **Step 0: Fix the example's tagged closers**
+- [x] **Step 0: Fix the example's tagged closers**
 
 `examples/sample-audit-output.md` lines 21 and 96 — change ` ```text ` to bare
 ` ``` `. Leave the *opening* fences at lines 13 (` ```json `) and 30 (` ```text `)
 tagged; only closers must be bare.
 
-- [ ] **Step 1: Add a job that fails on a tagged closing fence**
+- [x] **Step 1: Add a job that fails on a tagged closing fence**
 
 Append to `.github/workflows/ci.yml`, alongside the existing `markdown-lint` job:
 
@@ -843,7 +843,7 @@ was verified, not anticipated.
 Note `FNR` rather than `NR` — the awk runs per file here, but `FNR` keeps the
 line numbers correct if anyone later batches files into one invocation.
 
-- [ ] **Step 2: Verify the check flags today's offenders, then passes**
+- [x] **Step 2: Verify the check flags today's offenders, then passes**
 
 Run the same rule locally before and after the fixes:
 
@@ -871,7 +871,7 @@ examples/sample-audit-output.md:21, 96   — tagged closers
 
 Expected **after**: `(scan complete, rc=0)` with no findings.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add .github/workflows/ci.yml examples/sample-audit-output.md
@@ -902,7 +902,7 @@ snapshotting `ccusage` spend over time — a different thing.
 
 - Modify: `ROADMAP.md`
 
-- [ ] **Step 1: Add the gap under "Next (v0.2.x) — Other Planned Checks"**
+- [x] **Step 1: Add the gap under "Next (v0.2.x) — Other Planned Checks"**
 
 ```markdown
 - [ ] **Historical MCP failure detection** — the audit currently probes MCP
@@ -914,7 +914,7 @@ snapshotting `ccusage` spend over time — a different thing.
   session-storage directories that never appear in the normal session list.
 ```
 
-- [ ] **Step 2: Note the limitation in README**
+- [x] **Step 2: Note the limitation in README**
 
 Add to the "Important Limitations" list, so the `MCP server connectivity` row of
 "What It Checks" is not read as broader than it is:
@@ -926,7 +926,7 @@ Add to the "Important Limitations" list, so the `MCP server connectivity` row of
   [`ROADMAP.md`](ROADMAP.md).
 ```
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add ROADMAP.md README.md
@@ -946,7 +946,7 @@ was published 2026-09-12. This task ships a patch release. It never touches the
 - Modify: `CHANGELOG.md`, `ROADMAP.md`
 - Modify: `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`, `package.json`
 
-- [ ] **Step 1: Turn Unreleased into a dated 0.1.1 section**
+- [x] **Step 1: Turn Unreleased into a dated 0.1.1 section**
 
 On `main`, `CHANGELOG.md` has `## [Unreleased]` with a subsection mislabelled
 `### Added (initial release)`. Everything in it landed *after* v0.1.0 shipped, so:
@@ -962,7 +962,7 @@ On `main`, `CHANGELOG.md` has `## [Unreleased]` with a subsection mislabelled
   `## [0.1.0] — 2026-09-12`.
 - Add a fresh empty `## [Unreleased]` above `[0.1.1]`.
 
-- [ ] **Step 1b: Bump the version to 0.1.1 everywhere it is declared**
+- [x] **Step 1b: Bump the version to 0.1.1 everywhere it is declared**
 
 Set `"version": "0.1.1"` in all four places:
 
@@ -977,12 +977,12 @@ git grep -n '"version"' -- .claude-plugin/plugin.json .claude-plugin/marketplace
 
 Expected: every line shows `0.1.1`.
 
-- [ ] **Step 1c: Bring ROADMAP.md in line with what shipped**
+- [x] **Step 1c: Bring ROADMAP.md in line with what shipped**
 
 Check off ``First public release (`v0.1.0`)`` and note that it shipped on
 2026-09-12. Add a checked line for the v0.1.1 polish release beneath it.
 
-- [ ] **Step 2: Run the full CI gate locally**
+- [x] **Step 2: Run the full CI gate locally**
 
 ```bash
 shellcheck scripts/*.sh
@@ -993,7 +993,7 @@ python3 -c "import json;[json.load(open(p)) for p in ['.claude-plugin/plugin.jso
 
 Expected: all four pass with no output/0 issues.
 
-- [ ] **Step 3: Security sweep (checklist §2)**
+- [x] **Step 3: Security sweep (checklist §2)**
 
 ```bash
 git log -p | grep -inE 'api[_-]?key|secret|token|bearer ' || echo "no secrets in history"
@@ -1002,7 +1002,7 @@ git grep -inE 'api[_-]?key|secret|token|bearer ' -- ':!*.md' || echo "no secrets
 
 Review any hit before continuing. Documentation matches are expected (SECURITY.md discusses tokens); code matches are not.
 
-- [ ] **Step 4: Confirm the executable bit is committed**
+- [x] **Step 4: Confirm the executable bit is committed**
 
 ```bash
 git ls-files -s scripts/ | awk '{print $1, $4}'
@@ -1010,7 +1010,7 @@ git ls-files -s scripts/ | awk '{print $1, $4}'
 
 Expected: mode `100755` for both scripts. If `100644`, run `git update-index --chmod=+x scripts/*.sh` and commit.
 
-- [ ] **Step 5: Commit the release prep (no tag)**
+- [x] **Step 5: Commit the release prep (no tag)**
 
 ```bash
 git add CHANGELOG.md ROADMAP.md .claude-plugin/plugin.json .claude-plugin/marketplace.json package.json

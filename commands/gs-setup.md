@@ -25,4 +25,4 @@ Run the `ghostspend-setup` skill's full procedure now:
 6. Confirm with the user, then write `~/.ghostspend/config.json` with the
    collected answers.
 
-7. Summarize what was recorded, then ask: "GhostSpend setup complete. Ready to run an audit? (yes/no)" Do not mention `/gs-audit` by name in the question itself. If the user answers yes, immediately invoke the `ghostspend-audit` skill in the background — do not wait for the user to type `/gs-audit` separately. If the user answers no, simply confirm that `/gs-audit` is available whenever they're ready.
+7. Summarize what was recorded, then ask: "GhostSpend setup complete. Ready to run an audit? (yes/no)" Do not mention `/gs-audit` by name in the question itself. If the user answers yes, immediately invoke the `ghostspend-audit` skill — do not wait for the user to type `/gs-audit` separately. If the user answers no, simply confirm that `/gs-audit` is available whenever they're ready.

@@ -44,7 +44,7 @@ but checking first avoids duplicate discussion threads.
 ## Development Setup
 
 ```bash
-git clone https://github.com/danmackenzie/ghostspend.git
+git clone https://github.com/danmackenz/ghostspend.git
 cd ghostspend
 chmod +x scripts/*.sh
 ./scripts/setup.sh

@@ -7,7 +7,8 @@ This document tracks where GhostSpend is headed. It's intentionally short and pr
 - [x] Core audit script (`scripts/ghostspend.sh`) — hooks, MCP connection status, plugin build health, project config drift, cross-provider spend via `ccusage`
 - [x] Interactive setup (`scripts/setup.sh`) — dependency check, tool detection, known-tools baseline
 - [x] Claude Code plugin packaging — `/gs-setup` and `/gs-audit` slash commands, orchestrator agent
-- [ ] First public release (`v0.1.0`) — see release checklist issue
+- [x] First public release (`v0.1.0`) — shipped 2026-09-12
+- [x] v0.1.1 release polish — verified defects and documentation drift fixed
 
 ## Next (v0.2.x) — Guided Remediation: `/gs-fix`
 
@@ -25,6 +26,13 @@ The single highest-value addition planned: turning GhostSpend from a *diagnose-o
 
 ## Next (v0.2.x) — Other Planned Checks
 
+- [ ] **Historical MCP failure detection** — the audit currently probes MCP
+  connectivity only at run time (`claude mcp list`). A server that fails and
+  retries for an extended period between audits, then happens to be connected
+  when the audit runs, is invisible. Scanning Claude Desktop/Code MCP logs for
+  repeated connection failures against the same server would catch these retry
+  storms. Also not covered today: long-lived VM keepalive loops, and orphaned
+  session-storage directories that never appear in the normal session list.
 - [ ] **Historical trend tracking** — store audit results over time (e.g. `~/.ghostspend/history/`) so users can see spend/config drift trends across weeks, not just a single point-in-time snapshot
 - [ ] **Oversized CLAUDE.md / AGENTS.md detection** — flag project instruction files above a line-count threshold, since these get re-sent as context on every turn and are an under-recognized cost driver
 - [ ] **Cron / launchd / scheduled task scanning** — detect background jobs that might be triggering AI CLI tools without the user's direct action (this came up directly from Dan's Codex/Haiku investigation)
@@ -33,7 +41,7 @@ The single highest-value addition planned: turning GhostSpend from a *diagnose-o
 ## Later (Unscheduled)
 
 - [ ] **Windows support** — current scripts are bash/macOS-Linux only; a PowerShell port or WSL-based path is needed for Windows users
-- [ ] **More provider coverage** — expand beyond Claude Code, Codex CLI, Gemini CLI as `ccusage` (or equivalent tooling) adds support for more agentic CLIs
+- [ ] **More provider coverage** — expand beyond Claude Code, Codex CLI, Gemini CLI, and OpenCode as `ccusage` (or equivalent tooling) adds support for more agentic CLIs. GitHub Copilot CLI is advertised in `README.md`'s intro but has no detection branch in either script yet.
 - [ ] **Config file schema versioning** — as `~/.ghostspend/config.json` grows, add a `schemaVersion` field and migration handling so upgrades don't break existing configs
 - [ ] **`/gs-fix` execution history** — log which fixes were applied, when, and via which option chosen, feeding into historical trend tracking above
 - [ ] **Opt-in anonymized benchmarking** — let users optionally compare their spend/config patterns against anonymized aggregate data from other GhostSpend users (strictly opt-in, no default data collection — see `SECURITY.md`)

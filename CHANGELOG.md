@@ -4,7 +4,9 @@ All notable changes to GhostSpend are documented here.
 
 ## [Unreleased]
 
-### Added (initial release)
+## [0.1.1] — 2026-09-13
+
+### Added
 
 - `CLAUDE.md`: full project contract for this repo (not the plugin
   product) — commands, architecture rules, task workflows, security
@@ -19,7 +21,7 @@ All notable changes to GhostSpend are documented here.
   design boundaries (no fully-autonomous remediation, no real-time
   monitoring).
 - `docs/config.md`: full schema reference for `~/.ghostspend/config.json`,
-  including the `knownTools` field that drives unexpected-usage flagging.
+  including the `known_tools` field that drives unexpected-usage flagging.
 - `docs/gs-fix-dev-plan.md`: working engineering spec for the planned
   `/gs-fix` command — interview-style remediation flow, severity
   classification, worked examples per finding type, and non-negotiable
@@ -55,9 +57,51 @@ All notable changes to GhostSpend are documented here.
   would have failed to parse), and expanded markdown-lint scope to include
   `docs/**/*.md`, `examples/**/*.md`, `ROADMAP.md`, `CONTRIBUTING.md`, and
   `SECURITY.md`. Added JSON validation for `marketplace.json` and
-  `package.json` alongside the existing `plugin.json` check.
+  `package.json` alongside the existing `plugin.json` check. Fixed YAML
+  indentation that made three workflow files invalid (#10).
 
-## [0.1.0] — Initial release
+### Fixed
+
+- `scripts/setup.sh`: fixed a bash 3.2 crash on stock macOS — `"${arr[@]}"`
+  on an empty array is an unbound-variable error under `set -u`. With no
+  detected AI-tool data directories, setup died before the scan-dir prompt;
+  declining every detected tool printed the error mid-run and produced the
+  right JSON only by accident. Also closes two dead-end exits (existing
+  config, aborted write) that stopped instead of offering to run an audit,
+  and drops an "in the background" instruction that would have hidden
+  interactive audit output.
+- `scripts/ghostspend.sh`: the plugin-health "OK" line was suppressed
+  whenever any earlier section had already recorded a finding — now scoped
+  to a section-local counter. The project-config-drift check printed counts
+  but never produced a finding; it now flags project-level `.mcp.json`
+  files. Removed an unconditional pseudo-finding that made the
+  clean-environment "Environment looks clean" branch unreachable whenever
+  `ccusage` ran. Collapsed three near-identical per-tool detection blocks
+  into one table-driven loop.
+- `package.json`: `bin` and `npm run setup` pointed at
+  `./scripts/gs-setup.sh`, which doesn't exist; corrected to
+  `./scripts/setup.sh`. Also corrected `homepage`, `repository.url`, and
+  `bugs.url` from the stale `danmackenzie` owner to the real `danmackenz`.
+- `CONTRIBUTING.md`: corrected the clone URL to the real repo owner.
+- `docs/config.md`: rewritten against the actual snake_case schema
+  (`known_tools`, `scan_dirs`, `ccusage_installed`, `rtk_installed`,
+  `setup_completed_at`) — the previous camelCase schema never existed.
+  Also fixed five code fences closed with `` ```json `` instead of a bare
+  closer, which mangled rendering from the Location section down.
+- `examples/sample-audit-output.md`: fixed two tagged closing fences that
+  rendered the rest of the file as one code block.
+- `README.md`: fixed the repository structure diagram (`marketplace.json`
+  lives under `.claude-plugin/`, not the repo root; added the new
+  `docs/gs-fix-dev-plan.md` entry), corrected the stale `/audit` reference,
+  and stopped over-claiming `copilot-cli` coverage in the "What It Checks"
+  table (neither script has a detection branch for it yet).
+- `.claude-plugin/marketplace.json`: the marketplace-level `version` was
+  `1.0.0` for a 0.1.x project; aligned to the plugin's actual version.
+- `.github/workflows/ci.yml`: added a fence-style check — a closing fence
+  tagged with its opening language (e.g. `` ```json ``) is not recognized
+  as a closer, and `markdownlint` does not catch this class of bug.
+
+## [0.1.0] — 2026-09-12
 
 ### Added
 

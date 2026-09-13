@@ -116,6 +116,7 @@ section "3. Installed plugin build health (missing dist/ detection)"
 # ---------------------------------------------------------------------------
 PLUGIN_CACHE="$HOME/.claude/plugins/cache"
 if [[ -d "$PLUGIN_CACHE" ]]; then
+  PLUGIN_ISSUES=0
   while IFS= read -r pkgjson; do
     plugin_dir=$(dirname "$pkgjson")
     main_entry=$(grep -o '"main"[[:space:]]*:[[:space:]]*"[^"]*"' "$pkgjson" 2>/dev/null | sed 's/.*"main"[[:space:]]*:[[:space:]]*"//;s/"$//')
@@ -124,10 +125,11 @@ if [[ -d "$PLUGIN_CACHE" ]]; then
       if [[ ! -f "$full_path" ]]; then
         fail "Missing build output: $full_path"
         FINDINGS+=("Plugin at $plugin_dir declares main entry '$main_entry' but the file doesn't exist. Likely needs: cd \"$plugin_dir\" && npm install && npm run build")
+        PLUGIN_ISSUES=$((PLUGIN_ISSUES + 1))
       fi
     fi
   done < <(find "$PLUGIN_CACHE" -maxdepth 3 -iname "package.json" 2>/dev/null)
-  if [[ ${#FINDINGS[@]} -eq 0 ]]; then
+  if [[ "$PLUGIN_ISSUES" -eq 0 ]]; then
     ok "All installed plugins with a package.json 'main' entry have their build output present"
   fi
 else
@@ -147,6 +149,10 @@ for dir in "${SCAN_DIRS[@]}"; do
   COUNT_MCP=$(echo "$LOCAL_MCP" | grep -c . || true)
   echo "    - Local settings.json files: $COUNT_SETTINGS"
   echo "    - Local .mcp.json files: $COUNT_MCP"
+  if [[ "$COUNT_MCP" -gt 0 ]]; then
+    warn "$COUNT_MCP project-level .mcp.json file(s) under $dir may duplicate global MCP config"
+    FINDINGS+=("$COUNT_MCP project-level .mcp.json file(s) under $dir: $(echo "$LOCAL_MCP" | tr '\n' ' ')")
+  fi
 done
 
 
@@ -176,61 +182,36 @@ if [[ -n "$CCUSAGE_BIN" ]]; then
   echo ""
   echo "--- Per-tool presence check ---"
 
-  if [[ -d "$HOME/.codex" ]]; then
-    DETECTED_TOOLS_CODEX=1
-    warn "Codex CLI local data found at ~/.codex"
-  else
-    DETECTED_TOOLS_CODEX=0
-  fi
+  # label|local data path|substring matched against known_tools|drill-down hint
+  TOOL_TABLE="Codex CLI|$HOME/.codex|codex|ccusage codex daily
+Gemini CLI|$HOME/.gemini|gemini|ccusage gemini daily
+OpenCode|$HOME/.config/opencode|opencode|"
 
-  if [[ -d "$HOME/.gemini" ]]; then
-    DETECTED_TOOLS_GEMINI=1
-    warn "Gemini CLI local data found at ~/.gemini"
-  else
-    DETECTED_TOOLS_GEMINI=0
-  fi
+  ANY_DETECTED=0
+  while IFS='|' read -r label path key hint; do
+    [[ -n "$label" ]] || continue
+    [[ -d "$path" ]] || continue
+    ANY_DETECTED=1
+    warn "$label local data found at $path"
+    if [[ -n "$KNOWN_TOOLS" && "$KNOWN_TOOLS" != *"$key"* ]]; then
+      if [[ -n "$hint" ]]; then
+        flag "$label has local activity but is NOT in your known_tools list. Run '$hint' to see its spend."
+      else
+        flag "$label has local activity but is NOT in your known_tools list."
+      fi
+      FLAGGED_TOOLS+=("$key")
+    fi
+  done <<< "$TOOL_TABLE"
 
-  if [[ -d "$HOME/.config/opencode" ]]; then
-    DETECTED_TOOLS_OPENCODE=1
-    warn "OpenCode local data found at ~/.config/opencode"
-  else
-    DETECTED_TOOLS_OPENCODE=0
-  fi
-
-  if [[ "$DETECTED_TOOLS_CODEX" -eq 0 && "$DETECTED_TOOLS_GEMINI" -eq 0 && "$DETECTED_TOOLS_OPENCODE" -eq 0 ]]; then
+  if [[ "$ANY_DETECTED" -eq 0 ]]; then
     ok "No local data found for other tracked AI CLI tools"
   fi
-
-
-  # Flag against known_tools if config exists
-  if [[ -n "$KNOWN_TOOLS" ]]; then
-    echo ""
-    echo "--- Unexpected usage check (against your known_tools list) ---"
-
-    if [[ "$DETECTED_TOOLS_CODEX" -eq 1 && "$KNOWN_TOOLS" != *"codex"* ]]; then
-      flag "Codex CLI has local activity but is NOT in your known_tools list. Run 'ccusage codex daily' to see its spend."
-      FLAGGED_TOOLS+=("codex")
-    fi
-
-    if [[ "$DETECTED_TOOLS_GEMINI" -eq 1 && "$KNOWN_TOOLS" != *"gemini"* ]]; then
-      flag "Gemini CLI has local activity but is NOT in your known_tools list. Run 'ccusage gemini daily' to see its spend."
-      FLAGGED_TOOLS+=("gemini")
-    fi
-
-    if [[ "$DETECTED_TOOLS_OPENCODE" -eq 1 && "$KNOWN_TOOLS" != *"opencode"* ]]; then
-      flag "OpenCode has local activity but is NOT in your known_tools list."
-      FLAGGED_TOOLS+=("opencode")
-    fi
-
-    if [[ ${#FLAGGED_TOOLS[@]} -eq 0 ]]; then
-      ok "No tool activity found outside your known_tools list"
-    fi
-  else
+  if [[ -n "$KNOWN_TOOLS" && ${#FLAGGED_TOOLS[@]} -eq 0 ]]; then
+    ok "No tool activity found outside your known_tools list"
+  fi
+  if [[ -z "$KNOWN_TOOLS" ]]; then
     warn "No known_tools baseline configured — run ./setup.sh to enable unexpected-usage flagging"
   fi
-
-
-  FINDINGS+=("Review the combined ccusage report above for spend attributed to tools outside your known-tools baseline.")
 else
   warn "Neither ccusage nor npx is available — skipping spend check entirely."
 fi

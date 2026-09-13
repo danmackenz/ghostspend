@@ -1,16 +1,16 @@
 {
   "name": "ghostspend",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Find the AI spend you didn't know you had — audits Claude Code, Codex CLI, Gemini CLI and other AI CLI tools for hidden token/cost leakage from misconfigured hooks, dead MCP servers, broken plugin builds, and config drift.",
   "license": "MIT",
   "author": "Dan Mackenzie",
-  "homepage": "https://github.com/danmackenzie/ghostspend",
+  "homepage": "https://github.com/danmackenz/ghostspend",
   "repository": {
     "type": "git",
-    "url": "https://github.com/danmackenzie/ghostspend.git"
+    "url": "https://github.com/danmackenz/ghostspend.git"
   },
   "bugs": {
-    "url": "https://github.com/danmackenzie/ghostspend/issues"
+    "url": "https://github.com/danmackenz/ghostspend/issues"
   },
   "keywords": [
     "claude-code",
@@ -25,10 +25,10 @@
   ],
   "bin": {
     "ghostspend": "./scripts/ghostspend.sh",
-    "ghostspend-setup": "./scripts/gs-setup.sh"
+    "ghostspend-setup": "./scripts/setup.sh"
   },
   "scripts": {
-    "setup": "bash ./scripts/gs-setup.sh",
+    "setup": "bash ./scripts/setup.sh",
     "audit": "bash ./scripts/ghostspend.sh",
     "lint": "shellcheck scripts/*.sh"
   },

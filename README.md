@@ -21,7 +21,7 @@ Most usage trackers show you a number. GhostSpend asks *"did you expect this?"* 
 | 3 | Plugin build integrity | Cached plugins shipped as TypeScript source sometimes never get built, causing silent connection failures every session |
 | 4 | Project-level config drift | Individual repos can carry `.claude/settings.json` or `.mcp.json` that duplicates or conflicts with global config |
 | 5 | **Cross-provider spend** (via `ccusage`) | Surfaces Codex CLI, Gemini CLI, OpenCode, and other tool usage in one combined report |
-| 6 | **Unexpected-tool flagging** | Cross-references spend against your known-tools baseline — the core feature |
+| 6 | **Unexpected-tool flagging** (Codex CLI, Gemini CLI, OpenCode) | Cross-references local activity against your known-tools baseline — the core feature |
 | 7 | Orphaned AI CLI processes | Catches zombie processes left running after a crashed connection |
 
 ## Important Limitations (Read Before Relying On This)
@@ -32,6 +32,10 @@ Most usage trackers show you a number. GhostSpend asks *"did you expect this?"* 
 - **Codex CLI has no native dollar-cost tracking.** `ccusage`'s Codex figures are *estimates* from token counts against third-party pricing data (LiteLLM), not an OpenAI-confirmed bill. GhostSpend reports this distinction rather than presenting estimates as fact.
 - **Doesn't explain *why* a background tool ran.** It flags *that* a tool has unexpected spend and points toward likely causes (cron jobs, launchd agents, IDE extensions, notify hooks), but tracing the exact trigger is a manual follow-up.
 - **bash 3.2 compatible by design.** macOS ships bash 3.2 by default (no `mapfile`, no bash4+ features). Both scripts are deliberately written to run on stock macOS without requiring a Homebrew bash upgrade.
+- **MCP connectivity is checked at audit time only.** A server that failed
+  and retried repeatedly since your last audit, but is connected right now,
+  will not be flagged. GhostSpend does not currently read MCP logs — see
+  [`ROADMAP.md`](ROADMAP.md).
 
 ## Prerequisites
 
@@ -183,7 +187,8 @@ GhostSpend's scripts are bash-based and currently only tested on macOS and Linux
 ```bash
 ghostspend/
 ├── .claude-plugin/
-│   └── plugin.json                    # Plugin manifest
+│   ├── plugin.json                    # Plugin manifest
+│   └── marketplace.json               # Plugin marketplace manifest
 ├── agents/
 │   └── ghostspend-orchestrator.md     # Orchestrates setup + audit into one report
 ├── skills/
@@ -200,7 +205,8 @@ ghostspend/
 ├── examples/
 │   └── sample-audit-output.md         # Real worked example: raw ccusage → flagged report
 ├── docs/
-│   └── config.md                      # ~/.ghostspend/config.json schema reference
+│   ├── config.md                      # ~/.ghostspend/config.json schema reference
+│   └── gs-fix-dev-plan.md             # /gs-fix engineering spec (planned v0.2.x)
 ├── .github/                           # Issue templates, PR template, CI workflow
 ├── CLAUDE.md                          # Project contract Claude Code reads when developing this repo
 ├── AGENTS.md                          # Same contributor guidance, portable to Codex/Cursor/other agents
@@ -211,7 +217,6 @@ ghostspend/
 ├── CODE_OF_CONDUCT.md
 ├── SECURITY.md
 ├── package.json
-├── marketplace.json
 └── README.md
 ```
 
