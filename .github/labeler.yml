@@ -1,0 +1,30 @@
+commands:
+  - commands/**
+
+skills:
+  - skills/**
+
+agents:
+  - agents/**
+
+scripts:
+  - scripts/**
+
+documentation:
+  - README.md
+  - AGENTS.md
+  - CLAUDE.md
+  - CONTRIBUTING.md
+  - ROADMAP.md
+  - CHANGELOG.md
+  - docs/**
+  - examples/**
+
+ci:
+  - .github/**
+
+config:
+  - .claude-plugin/**
+  - marketplace.json
+  - package.json
+  - .markdownlint-cli2.json

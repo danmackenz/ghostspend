@@ -1,0 +1,62 @@
+name-template: 'v$RESOLVED_VERSION'
+tag-template: 'v$RESOLVED_VERSION'
+
+categories:
+  - title: '🚀 Features'
+    labels:
+      - 'feature'
+      - 'enhancement'
+  - title: '🐛 Bug Fixes'
+    labels:
+      - 'fix'
+      - 'bug'
+  - title: '📝 Documentation'
+    labels:
+      - 'documentation'
+  - title: '🧩 Commands & Skills'
+    labels:
+      - 'commands'
+      - 'skills'
+      - 'agents'
+  - title: '🔧 Scripts'
+    labels:
+      - 'scripts'
+  - title: '⚙️ CI & Config'
+    labels:
+      - 'ci'
+      - 'config'
+  - title: '🧹 Maintenance'
+    labels:
+      - 'chore'
+      - 'dependencies'
+
+change-template: '- $TITLE (#$NUMBER) @$AUTHOR'
+change-title-escapes: '\<*_&'
+
+version-resolver:
+  major:
+    labels:
+      - 'major'
+  minor:
+    labels:
+      - 'feature'
+      - 'enhancement'
+  patch:
+    labels:
+      - 'fix'
+      - 'bug'
+      - 'documentation'
+      - 'chore'
+      - 'ci'
+      - 'config'
+  default: patch
+
+exclude-labels:
+  - 'skip-changelog'
+
+template: |
+  ## What's Changed
+
+  $CHANGES
+
+  **Full Changelog**: https://github.com/danmackenz/ghostspend/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
