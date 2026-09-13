@@ -1,4 +1,3 @@
-cat > .github/workflows/labeler.yml << 'EOF'
 # This workflow will triage pull requests and apply a label based on the
 # paths that are modified in the pull request.
 #
@@ -20,37 +19,3 @@ jobs:
       - uses: actions/labeler@v4
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
-EOF
-
-cat > .github/labeler.yml << 'EOF'
-commands:
-  - commands/**
-
-skills:
-  - skills/**
-
-agents:
-  - agents/**
-
-scripts:
-  - scripts/**
-
-documentation:
-  - README.md
-  - AGENTS.md
-  - CLAUDE.md
-  - CONTRIBUTING.md
-  - ROADMAP.md
-  - CHANGELOG.md
-  - docs/**
-  - examples/**
-
-ci:
-  - .github/**
-
-config:
-  - .claude-plugin/**
-  - marketplace.json
-  - package.json
-  - .markdownlint-cli2.json
-EOF
