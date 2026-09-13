@@ -1,6 +1,6 @@
 {
   "name": "ghostspend",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Find the AI spend you didn't know you had — audits Claude Code, Codex CLI, Gemini CLI and other AI CLI tools for hidden token/cost leakage from misconfigured hooks, dead MCP servers, broken plugin builds, and config drift.",
   "license": "MIT",
   "author": "Dan Mackenzie",

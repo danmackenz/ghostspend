@@ -7,7 +7,8 @@ This document tracks where GhostSpend is headed. It's intentionally short and pr
 - [x] Core audit script (`scripts/ghostspend.sh`) — hooks, MCP connection status, plugin build health, project config drift, cross-provider spend via `ccusage`
 - [x] Interactive setup (`scripts/setup.sh`) — dependency check, tool detection, known-tools baseline
 - [x] Claude Code plugin packaging — `/gs-setup` and `/gs-audit` slash commands, orchestrator agent
-- [ ] First public release (`v0.1.0`) — see release checklist issue
+- [x] First public release (`v0.1.0`) — shipped 2026-09-12
+- [x] v0.1.1 release polish — verified defects and documentation drift fixed
 
 ## Next (v0.2.x) — Guided Remediation: `/gs-fix`
 

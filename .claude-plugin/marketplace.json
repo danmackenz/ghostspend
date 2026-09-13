@@ -5,14 +5,14 @@
     "name": "Dan Mackenzie",
     "url": "https://github.com/danmackenz"
   },
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "GhostSpend plugin marketplace",
   "plugins": [
     {
       "name": "ghostspend",
       "source": "./",
       "description": "Finds and fixes hidden AI CLI token/cost leakage across Claude Code, Codex CLI, Gemini CLI, and other tools.",
-      "version": "0.1.0"
+      "version": "0.1.1"
     }
   ]
 }
