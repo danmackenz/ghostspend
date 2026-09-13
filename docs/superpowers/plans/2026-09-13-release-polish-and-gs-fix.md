@@ -1,4 +1,4 @@
-# GhostSpend: v0.1.0 Release Polish + `/gs-fix` Phases 1–2
+# GhostSpend: v0.1.1 Release Polish + `/gs-fix` Phases 1–2
 
 ## Start here (session handover)
 
@@ -27,7 +27,7 @@ begin Milestone B until Milestone A is merged.
 ```bash
 git status --short          # if anything is listed, stop and ask before continuing
 git fetch origin
-git checkout -b release/v0.1.0-polish origin/main
+git checkout -b release/v0.1.1-polish origin/main
 git log --oneline -1        # confirm the base; line numbers assume 3eef4dd's content
 ```
 
@@ -54,13 +54,19 @@ If `main` has moved past `3eef4dd`, re-check the cited line numbers before editi
   Copilot API answers `400 The requested model is not supported`. It is not a
   required check. The required ones are Bash syntax check, Markdown lint,
   Shellcheck, and Validate JSON manifests.
+- **v0.1.0 is already public.** Tag `v0.1.0` points at `2490c0e` (2026-09-11),
+  and its GitHub release was published 2026-09-12. Milestone A ships **v0.1.1**.
+  Never create, move, or delete the `v0.1.0` tag, and don't rewrite the
+  `[0.1.0]` CHANGELOG entry. Release Drafter already maintains a **v0.1.1 draft
+  release**, and Task 6 publishes that instead of tagging by hand.
 
 **Decisions already made — do not relitigate:** polish ships before `/gs-fix`;
 `/gs-fix` stops at Phases 1–2 (Safest + Skip only); options are finding-type-aware;
 no `scripts/ghostspend-fix.sh`.
 
-**Needs your explicit approval before running:** `git tag`, any `git push`,
-`gh release create`, and the GitHub-side checklist items in Task 6 Step 6.
+**Needs your explicit approval before running:** any `git push`, opening or
+merging a PR, publishing the v0.1.1 draft release, and the GitHub-side checklist
+items in Task 6 Step 6. Never create, move, or delete a tag by hand.
 
 ---
 
@@ -68,9 +74,9 @@ no `scripts/ghostspend-fix.sh`.
 >
 > **This file is the canonical copy.** It was drafted in `~/.claude/plans/` during plan mode and moved here; edit this one, and check off steps here as they complete.
 
-**Goal:** Ship a correct, self-consistent v0.1.0, then add severity classification and a safe-fix-only `/gs-fix` command as v0.2.0.
+**Goal:** Ship a correct, self-consistent v0.1.1 (v0.1.0 is already public), then add severity classification and a safe-fix-only `/gs-fix` command as v0.2.0.
 
-**Architecture:** Two sequential milestones. **A** fixes verified defects and documentation drift, then tags v0.1.0. **B** adds a `severity|message` encoding to audit findings, then a `ghostspend-fix` skill that maps a finding type to a *finding-type-aware* option set and executes nothing without showing the exact command first.
+**Architecture:** Two sequential milestones. **A** fixes verified defects and documentation drift, then releases v0.1.1. **B** adds a `severity|message` encoding to audit findings, then a `ghostspend-fix` skill that maps a finding type to a *finding-type-aware* option set and executes nothing without showing the exact command first.
 
 **Tech Stack:** Bash 3.2 (stock macOS), Markdown + YAML frontmatter. No build step, no new dependencies — specifically **do not add `jq`**; the grep-based JSON reads in `ghostspend.sh` are a deliberate bash-3.2/no-dependency tradeoff.
 
@@ -108,6 +114,7 @@ as the plan assumes. Do not re-derive them; do re-run them if you change the cod
 | real `scripts/setup.sh` at `3eef4dd`, throwaway `HOME` | Task 2 Steps 1 and 6 | fatal at line 102 with no tool dirs (exit 1); non-fatal at line 130 when every tool is declined (exit 0, `[]` by accident) |
 | `printf 'n\\nn\\n\\n' \| setup.sh` with a config already present | the test command this plan used to contain | exits at "Reconfigure?" and never reaches the crash, a false pass |
 | `claude --plugin-dir <path>` | Task 8 Step 6, Gate 4 | listed in `claude --help`: loads a plugin for one session only |
+| release state (2026-09-13) | Task 6, Start here | tag `v0.1.0` → `2490c0e`, release published 2026-09-12; draft release `v0.1.1` exists (Release Drafter, target `main`); tag `v0.1.1` and branch `release/v0.1.1-polish` unused |
 
 Also confirmed: `shellcheck scripts/*.sh` exits **0** on the current, broken code,
 and `markdownlint-cli2` reports **0 issues** on a file with tagged closing fences.
@@ -115,7 +122,7 @@ Neither tool gates the two defect classes this plan is largely about.
 
 ## Context
 
-Two things prompted this work. First, a release-readiness pass against the v0.1.0 checklist surfaced defects that make the current `main` not shippable — including a crash on the project's own stated minimum bash and an npm `bin` entry pointing at a file that doesn't exist. Second, `/gs-fix` is the roadmap's top priority, and its spec document is referenced by five files but was never committed.
+Two things prompted this work. First, a release-readiness pass against the v0.1.0 checklist surfaced defects that make the current `main` incorrect. The checklist was written before v0.1.0 shipped on 2026-09-12, and it is still the right bar for v0.1.1. The defects include a crash on the project's own stated minimum bash and an npm `bin` entry pointing at a file that doesn't exist. Second, `/gs-fix` is the roadmap's top priority, and its spec document is referenced by five files but was never committed.
 
 A `ponytail-audit` complexity pass was also run; its findings are folded into Milestone A rather than deferred, since they touch the same functions.
 
@@ -171,7 +178,7 @@ Keep both `yagni` fields but **document them as advisory-only** rather than dele
 | `docs/gs-fix-dev-plan.md` | **new** — the spec, copied in from the user's local file | A |
 | `package.json` | correct `bin`/`scripts` paths, correct repo URLs | A |
 | `.claude-plugin/marketplace.json` | version alignment | A |
-| `README.md`, `CONTRIBUTING.md`, `CHANGELOG.md` | drift fixes, 0.1.0 entry | A |
+| `README.md`, `CONTRIBUTING.md`, `CHANGELOG.md` | drift fixes, 0.1.1 entry | A |
 | `skills/ghostspend-audit/SKILL.md` | severity table (source of truth, per spec §4) | B |
 | `skills/ghostspend-fix/SKILL.md` | **new** — finding → option-set → proposed command | B |
 | `commands/gs-fix.md` | **new** — thin dispatcher | B |
@@ -180,7 +187,7 @@ Keep both `yagni` fields but **document them as advisory-only** rather than dele
 
 ---
 
-## Milestone A — v0.1.0 Release Polish
+## Milestone A — v0.1.1 Release Polish
 
 ### Task 1: Land the missing spec document
 
@@ -238,7 +245,7 @@ git commit -m "Add gs-fix dev plan referenced by five existing files"
 
 ### Task 2: Fix the bash 3.2 crash in `setup.sh`
 
-The fatal path hits a fresh standalone user with no AI-tool data directories, which is exactly the "Option B, no Claude Code" audience README promises to support, so it blocks v0.1.0. `shellcheck` passes today and will still pass after the fix. The regression test is therefore a direct bash 3.2 run of the real script with a throwaway `HOME`, not shellcheck.
+The fatal path hits a fresh standalone user with no AI-tool data directories, which is exactly the "Option B, no Claude Code" audience README promises to support, so it blocks v0.1.1. `shellcheck` passes today and will still pass after the fix. The regression test is therefore a direct bash 3.2 run of the real script with a throwaway `HOME`, not shellcheck.
 
 **Files:**
 
@@ -692,7 +699,7 @@ git clone https://github.com/danmackenz/ghostspend.git
 
 - [ ] **Step 4: Align the marketplace version**
 
-`.claude-plugin/marketplace.json` declares `"version": "1.0.0"` at the marketplace level for a 0.1.0 project. Set it to `"0.1.0"` to match `plugin.json` and `package.json`.
+`.claude-plugin/marketplace.json` declares `"version": "1.0.0"` at the marketplace level for a 0.1.0 project. Set it to match `plugin.json` and `package.json`, currently `"0.1.0"`. The file also has a per-plugin `version` (line 15). Task 6 bumps all of these to `"0.1.1"` together.
 
 - [ ] **Step 5: Fix the README structure diagram**
 
@@ -928,17 +935,52 @@ git commit -m "Record audit-time-only MCP check as a known gap"
 
 ---
 
-### Task 6: Cut the v0.1.0 release
+### Task 6: Prepare the v0.1.1 release
+
+v0.1.0 is already public: tag `v0.1.0` points at `2490c0e`, and its GitHub release
+was published 2026-09-12. This task ships a patch release. It never touches the
+`v0.1.0` tag or rewrites the `[0.1.0]` CHANGELOG entry.
 
 **Files:**
 
-- Modify: `CHANGELOG.md`
+- Modify: `CHANGELOG.md`, `ROADMAP.md`
+- Modify: `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`, `package.json`
 
-- [ ] **Step 1: Fold Unreleased into a dated 0.1.0 section**
+- [ ] **Step 1: Turn Unreleased into a dated 0.1.1 section**
 
-Merge the existing `## [Unreleased]` content into `## [0.1.0] — 2026-09-13`, and correct the two false claims in it: the `docs/config.md` bullet says it documents `knownTools` (it now documents `known_tools`), and the `docs/gs-fix-dev-plan.md` bullet was listed as added when the file was absent until Task 1.
+On `main`, `CHANGELOG.md` has `## [Unreleased]` with a subsection mislabelled
+`### Added (initial release)`. Everything in it landed *after* v0.1.0 shipped, so:
 
-Add a `### Fixed` subsection covering Tasks 2–5.
+- Rename `## [Unreleased]` to `## [0.1.1] — <release date>`, and relabel its
+  subsection `### Added`.
+- Correct its two false claims. The `docs/config.md` bullet says it documents
+  `knownTools`; it now documents `known_tools`. The `docs/gs-fix-dev-plan.md`
+  bullet lists the file as added, but it was absent until Task 1.
+- Add a `### Fixed` subsection covering Tasks 2–5, plus the workflow-file fix
+  from #10.
+- Leave the `## [0.1.0]` entry's content alone. Only add its release date:
+  `## [0.1.0] — 2026-09-12`.
+- Add a fresh empty `## [Unreleased]` above `[0.1.1]`.
+
+- [ ] **Step 1b: Bump the version to 0.1.1 everywhere it is declared**
+
+Set `"version": "0.1.1"` in all four places:
+
+- `.claude-plugin/plugin.json`
+- `package.json`
+- `.claude-plugin/marketplace.json`: both the marketplace-level `version` and
+  the plugin entry's `version`
+
+```bash
+git grep -n '"version"' -- .claude-plugin/plugin.json .claude-plugin/marketplace.json package.json
+```
+
+Expected: every line shows `0.1.1`.
+
+- [ ] **Step 1c: Bring ROADMAP.md in line with what shipped**
+
+Check off `First public release (\`v0.1.0\`)` and note that it shipped on
+2026-09-12. Add a checked line for the v0.1.1 polish release beneath it.
 
 - [ ] **Step 2: Run the full CI gate locally**
 
@@ -968,24 +1010,34 @@ git ls-files -s scripts/ | awk '{print $1, $4}'
 
 Expected: mode `100755` for both scripts. If `100644`, run `git update-index --chmod=+x scripts/*.sh` and commit.
 
-- [ ] **Step 5: Commit and tag**
-
-Tagging and pushing are shared-state actions — **confirm with the user before running Step 5.** Do not push without an explicit yes.
+- [ ] **Step 5: Commit the release prep (no tag)**
 
 ```bash
-git add CHANGELOG.md
-git commit -m "Prepare v0.1.0 release notes"
-git tag v0.1.0
+git add CHANGELOG.md ROADMAP.md .claude-plugin/plugin.json .claude-plugin/marketplace.json package.json
+git commit -m "Prepare v0.1.1 release"
 ```
 
-- [ ] **Step 6: Hand the GitHub-side checklist items to the user**
+**Do not run `git tag`.** This repo squash-merges PRs, so a tag created on this
+branch would point at a commit that never lands on `main`.
 
-Checklist §6 (branch protection, `develop` branch, default branch) and §8
-(repo description, topics, set Public, create the GitHub Release from the
-tag) are GitHub web-UI or `gh` operations on a shared remote. They are
-**not** part of this plan's automated execution — list them for the user to
-perform, and do not run `git push`, `git push --tags`, or `gh release create`
-without an explicit per-command yes.
+Pushing the branch and opening its PR are shared-state actions. **Confirm with
+the user first.** Once the PR's required checks pass, the user merges it.
+
+- [ ] **Step 6: Hand the release and the GitHub-side items to the user**
+
+After the release PR merges, the release itself is the **existing v0.1.1 draft**
+that Release Drafter maintains (target `main`). Publishing that draft creates tag
+`v0.1.1` on `main`. Tell the user to review the draft's notes against
+`CHANGELOG.md` and publish it. Do not run `gh release create` or `git push --tags`.
+
+Also list the remaining checklist items for the user:
+
+- **§6:** a `develop` branch and the default-branch setting. Branch protection
+  on `main` already exists, with required checks and `strict`.
+- **§8:** repo description and topics.
+
+These are GitHub web-UI operations on shared settings. They are not part of this
+plan's automated execution.
 
 ---
 
