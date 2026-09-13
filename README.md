@@ -98,9 +98,12 @@ chmod +x setup.sh ghostspend.sh
 ```bash
 /gs-setup
 /gs-audit
+/gs-fix
 ```
 
-Or just ask: *"Run a GhostSpend audit across all my AI tools."* The `ghostspend-orchestrator` agent handles running setup first if needed, then the audit, then presents one consolidated report with flagged findings at the top.
+Or just ask: *"Run a GhostSpend audit across all my AI tools."* The `ghostspend-orchestrator` agent handles running setup first if needed, then the audit, then presents one consolidated report with flagged findings at the top, then offers to walk through fixes.
+
+`/gs-fix` is currently **Phase 2**: it only offers **Safest** and **Skip** (no Balanced or free-text "Other" yet), and only for two finding types — an unbuilt plugin and a flagged tool not in your `known_tools`. Every other finding is reported as needing manual follow-up rather than guessed at. It never executes anything without showing the exact command first and getting your explicit yes, and there's no standalone bash equivalent — `/gs-fix` requires Claude Code.
 
 **From any terminal:**
 
@@ -190,23 +193,26 @@ ghostspend/
 │   ├── plugin.json                    # Plugin manifest
 │   └── marketplace.json               # Plugin marketplace manifest
 ├── agents/
-│   └── ghostspend-orchestrator.md     # Orchestrates setup + audit into one report
+│   └── ghostspend-orchestrator.md     # Orchestrates setup + audit + fix into one flow
 ├── skills/
 │   ├── ghostspend-setup/
 │   │   └── SKILL.md                   # First-run baseline configuration
-│   └── ghostspend-audit/
-│       └── SKILL.md                   # Full diagnostic methodology
+│   ├── ghostspend-audit/
+│   │   └── SKILL.md                   # Full diagnostic methodology, severity table
+│   └── ghostspend-fix/
+│       └── SKILL.md                   # Guided remediation (Phase 2: Safest/Skip only)
 ├── commands/
 │   ├── gs-setup.md                    # /gs-setup slash command
-│   └── gs-audit.md                    # /gs-audit slash command
+│   ├── gs-audit.md                    # /gs-audit slash command
+│   └── gs-fix.md                      # /gs-fix slash command
 ├── scripts/
 │   ├── setup.sh                       # Interactive, standalone-runnable, bash 3.2-compatible
 │   └── ghostspend.sh                  # Interactive, standalone-runnable, bash 3.2-compatible
 ├── examples/
-│   └── sample-audit-output.md         # Real worked example: raw ccusage → flagged report
+│   └── sample-audit-output.md         # Worked example (illustrative figures): raw ccusage → flagged report
 ├── docs/
 │   ├── config.md                      # ~/.ghostspend/config.json schema reference
-│   └── gs-fix-dev-plan.md             # /gs-fix engineering spec (planned v0.2.x)
+│   └── gs-fix-dev-plan.md             # /gs-fix engineering spec (Phases 1-2 shipped in v0.2.0)
 ├── .github/                           # Issue templates, PR template, CI workflow
 ├── CLAUDE.md                          # Project contract Claude Code reads when developing this repo
 ├── AGENTS.md                          # Same contributor guidance, portable to Codex/Cursor/other agents

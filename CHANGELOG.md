@@ -4,6 +4,38 @@ All notable changes to GhostSpend are documented here.
 
 ## [Unreleased]
 
+## [0.2.0] — 2026-09-13
+
+### Added
+
+- Severity classification for every `/gs-audit` finding (Phase 1 of
+  `/gs-fix`) — `scripts/ghostspend.sh` now encodes findings as
+  `severity|message` (`critical`/`high`/`medium`/`low`) via a new `finding()`
+  helper, and the Summary groups them critical-first. The mapping is
+  documented in `skills/ghostspend-audit/SKILL.md`'s new "Severity
+  Classification" section, which `ghostspend-fix` treats as the source of
+  truth rather than re-deriving it.
+- `/gs-fix` command and `ghostspend-fix` skill (Phase 2, safe-fix-only) —
+  walks audit findings critical-first, offering only **Safest** and **Skip**
+  for two finding types (unbuilt plugin, flagged tool not in `known_tools`).
+  Options are finding-type-aware, so a finding never presents two choices
+  that would do the same thing. Every other finding type is reported as
+  needing manual follow-up rather than guessed at. Nothing executes without
+  showing the exact command or config diff first and getting an explicit
+  yes — the same confirm-before-write principle every other GhostSpend
+  action already follows.
+- `ghostspend-orchestrator` gains a third stage: after presenting the
+  consolidated audit report, it now asks whether to proceed to remediation
+  and, on yes, hands off to `ghostspend-fix` without re-running setup or the
+  audit.
+
+### Fixed
+
+- `examples/sample-audit-output.md`: the prose in "What This Demonstrates"
+  still quoted the original real-looking `$0.36`/`$2.11` figures and
+  `2026-08-03`/`08-04` dates after the ccusage table itself was scrubbed to
+  synthetic values — updated to match.
+
 ## [0.1.1] — 2026-09-13
 
 ### Added

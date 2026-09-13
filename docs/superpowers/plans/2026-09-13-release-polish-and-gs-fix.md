@@ -1058,7 +1058,7 @@ Severity lives in `skills/ghostspend-audit/SKILL.md` as the documented source of
 
 - Produces: findings encoded as `"<severity>|<message>"` where severity ∈ `critical|high|medium|low`. Task 8's fix skill parses on the first `|`. Messages must not contain a leading `|`.
 
-- [ ] **Step 1: Add a `finding()` helper next to the existing output functions**
+- [x] **Step 1: Add a `finding()` helper next to the existing output functions**
 
 Alongside `ok()`/`warn()`/`fail()`/`flag()` at `scripts/ghostspend.sh:36-40`:
 
@@ -1067,7 +1067,7 @@ Alongside `ok()`/`warn()`/`fail()`/`flag()` at `scripts/ghostspend.sh:36-40`:
 finding() { FINDINGS+=("$1|$2"); }
 ```
 
-- [ ] **Step 2: Convert every `FINDINGS+=` call site**
+- [x] **Step 2: Convert every `FINDINGS+=` call site**
 
 Apply the spec §4 mapping:
 
@@ -1091,7 +1091,7 @@ Flagged tools stay in `FLAGGED_TOOLS` and are additionally recorded as findings 
 finding high "$label has local activity and is not in known_tools ($key)"
 ```
 
-- [ ] **Step 3: Group the Summary by severity, critical first**
+- [x] **Step 3: Group the Summary by severity, critical first**
 
 ```bash
 if [[ ${#FINDINGS[@]} -eq 0 ]]; then
@@ -1109,7 +1109,7 @@ fi
 
 `tr` rather than `${sev^^}` — parameter-expansion case conversion is bash 4 only.
 
-- [ ] **Step 3a: Refresh the worked example to the new Summary format**
+- [x] **Step 3a: Refresh the worked example to the new Summary format**
 
 `examples/sample-audit-output.md:89-93` reproduces the old Summary verbatim and
 goes stale twice over: Task 3 Step 3 deletes its finding #2 (the always-on
@@ -1129,7 +1129,7 @@ The flagged tools now appear as findings (Step 2), which is why the count rises
 even though the pseudo-finding was removed. Regenerate rather than hand-edit if
 possible — run the audit and paste real output, then scrub it per the next step.
 
-- [ ] **Step 3b: Confirm the example carries no real spend figures**
+- [x] **Step 3b: Confirm the example carries no real spend figures**
 
 `HANDOVER.md` Part 5 item 4 forbids baking one person's audit numbers into
 shipped documentation. The example currently shows `$443.41`, `$0.36`, `$2.11`,
@@ -1142,11 +1142,11 @@ under the heading stating the numbers are illustrative. Keep the *shape* of the
 output — the table, the model names' style, the `WARN Missing pricing` line —
 since that is what the example teaches.
 
-- [ ] **Step 4: Document the severity table in the audit skill**
+- [x] **Step 4: Document the severity table in the audit skill**
 
 Add a `## Severity Classification` section to `skills/ghostspend-audit/SKILL.md` after `## Output Format`, reproducing the spec §4 table and stating that it is the source of truth that `ghostspend-fix` reads — not something the fix skill re-derives.
 
-- [ ] **Step 5: Verify against a real environment on bash 3.2**
+- [x] **Step 5: Verify against a real environment on bash 3.2**
 
 ```bash
 shellcheck scripts/ghostspend.sh
@@ -1155,7 +1155,7 @@ shellcheck scripts/ghostspend.sh
 
 Expected: Summary lines are prefixed `[CRITICAL]` / `[HIGH]` / `[MEDIUM]` / `[LOW]` and appear in that order. Confirm at least one real finding from the current machine carries a plausible severity.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add scripts/ghostspend.sh skills/ghostspend-audit/SKILL.md examples/sample-audit-output.md
@@ -1183,7 +1183,7 @@ Ships **Safest** and **Skip** only, for the two most common finding types: unbui
 - Consumes: `severity|message` findings from Task 7.
 - Produces: a per-finding proposed command, shown verbatim before any execution.
 
-- [ ] **Step 1: Write the fix skill**
+- [x] **Step 1: Write the fix skill**
 
 `skills/ghostspend-fix/SKILL.md` — frontmatter `description` must be specific and trigger-oriented, since it determines invocation:
 
@@ -1208,7 +1208,7 @@ Body must cover:
 - **Everything else in this phase:** report as "not yet supported by `/gs-fix` — manual follow-up", do not improvise a fix.
 - **Hard boundaries**, mirroring `SECURITY.md`: never disable, delete, or modify another vendor's CLI tool; never execute without showing the exact command/diff and getting a yes; decline and explain rather than attempting anything outside the documented action list.
 
-- [ ] **Step 2: Write the thin command dispatcher**
+- [x] **Step 2: Write the thin command dispatcher**
 
 `commands/gs-fix.md` — keep the `gs-` prefix, do not duplicate the skill's procedure:
 
@@ -1231,7 +1231,7 @@ Invoke the `ghostspend-fix` skill.
 5. Close with a summary: fixed, skipped, needs manual follow-up.
 ```
 
-- [ ] **Step 3: Sync the plugin manifest**
+- [x] **Step 3: Sync the plugin manifest**
 
 `.claude-plugin/plugin.json` — add both files, or the components silently do not load:
 
@@ -1250,11 +1250,11 @@ Invoke the `ghostspend-fix` skill.
 
 Bump `version` to `0.2.0` here, in `package.json`, and in `.claude-plugin/marketplace.json`.
 
-- [ ] **Step 4: Add the orchestrator's third stage**
+- [x] **Step 4: Add the orchestrator's third stage**
 
 `agents/ghostspend-orchestrator.md` — insert a step 5 before the existing "Never apply a fix without confirmation" (which becomes step 6): after presenting the consolidated report, ask whether to proceed to remediation; on yes, invoke `ghostspend-fix`. Do not re-run setup or audit that already ran this session.
 
-- [ ] **Step 5: Verify frontmatter parses and the manifest is complete**
+- [x] **Step 5: Verify frontmatter parses and the manifest is complete**
 
 ```bash
 for f in commands/*.md agents/*.md skills/*/SKILL.md; do
@@ -1274,7 +1274,7 @@ print('listed but absent:', listed-actual or 'none')
 
 Expected: `OK` for every component file, and both diff sets `none`.
 
-- [ ] **Step 6: Live-invoke the plugin — required, not optional**
+- [ ] **Step 6: Live-invoke the plugin — required, not optional** — DEFERRED: requires an interactive claude session, which the executing agent could not drive from a non-interactive Bash tool. See handover note for the exact command.
 
 `CLAUDE.md` requires that skill/agent/command Markdown changes be exercised in a live Claude Code session, not just diffed.
 
@@ -1302,14 +1302,14 @@ Then run `/gs-audit` followed by `/gs-fix`. Confirm by observation: `/gs-fix` ap
 
 Report what was actually observed in the session, not the diff.
 
-- [ ] **Step 7: Update docs**
+- [x] **Step 7: Update docs**
 
 - `README.md`: add `/gs-fix` to Usage and the structure diagram; state the Phase-2 limitation (Safest/Skip only, two finding types) and that there is no standalone bash equivalent.
 - `ROADMAP.md`: check off severity classification and the `/gs-fix` skeleton; leave Phases 3–5 open.
 - `CHANGELOG.md`: add `## [0.2.0]` with the new command, skill, severity tagging, and orchestrator stage.
 - `docs/gs-fix-dev-plan.md`: mark Phases 1–2 complete.
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add skills/ghostspend-fix commands/gs-fix.md .claude-plugin/plugin.json \

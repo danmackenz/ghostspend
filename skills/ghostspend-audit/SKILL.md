@@ -150,3 +150,18 @@ plainly rather than presenting estimates as fact.
 A table: Issue | Tool/Provider | Root Cause | Fix | Scope (global/
 per-project) | Confirmed vs. Estimated Cost | Status. Flagged unexpected-tool
 findings go above the table, not inside it.
+
+## Severity Classification
+
+Every finding is tagged with a severity level, so the planned `/gs-fix` command
+can prioritize and act on them. This table is the source of truth that
+`ghostspend-fix` reads — the script does not re-derive severities, it
+mechanically encodes them.
+
+| Finding Type | Severity | Rationale |
+| --- | --- | --- |
+| MCP server(s) failing to connect | `high` | Active connectivity problem; affects immediate Claude Code usage. |
+| MCP server(s) pending approval | `low` | Usually a harmless duplicate .mcp.json; does not impede operation. |
+| Plugin build output missing (unbuilt TypeScript source) | `critical` | Likely silent MCP server crash on every session; invisible overhead. |
+| Project-level .mcp.json file(s) detected | `medium` | Config drift risk; may mask problems or cause unexpected behavior on per-project context switch. |
+| Unexpected tool detected (outside known_tools baseline) | `high` | Spend is active but unintended; should be reviewed and either added to baseline or disabled. |

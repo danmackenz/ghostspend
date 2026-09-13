@@ -1,7 +1,7 @@
 {
   "name": "ghostspend",
   "displayName": "GhostSpend",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Finds and fixes hidden AI CLI token/cost leakage — across Claude Code, Codex CLI, Gemini CLI, and other tools — from misconfigured hooks, dead MCP servers, broken plugin builds, and project config drift.",
   "author": {
     "name": "Dan Mackenzie",
@@ -21,10 +21,12 @@
   ],
   "commands": [
     "./commands/gs-audit.md",
+    "./commands/gs-fix.md",
     "./commands/gs-setup.md"
   ],
   "skills": [
     "./skills/ghostspend-audit/SKILL.md",
+    "./skills/ghostspend-fix/SKILL.md",
     "./skills/ghostspend-setup/SKILL.md"
   ],
   "agents": [

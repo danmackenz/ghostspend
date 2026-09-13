@@ -38,6 +38,7 @@ ok()      { echo -e "${GREEN}[OK]${RESET} $1"; }
 warn()    { echo -e "${YELLOW}[WARN]${RESET} $1"; }
 fail()    { echo -e "${RED}[FAIL]${RESET} $1"; }
 flag()    { echo -e "${CYAN}[FLAGGED]${RESET} $1"; }
+finding() { FINDINGS+=("$1|$2"); }
 
 
 FINDINGS=()
@@ -99,12 +100,13 @@ if command -v claude >/dev/null 2>&1; then
   PENDING_COUNT=$(echo "$MCP_OUTPUT" | grep -c "Pending approval" || true)
   if [[ "$FAILED_COUNT" -gt 0 ]]; then
     fail "$FAILED_COUNT MCP server(s) failed to connect"
-    FINDINGS+=("$FAILED_COUNT MCP server(s) failing — see list above for reasons (auth, config mismatch, missing build)")
+    finding high "$FAILED_COUNT MCP server(s) failing — see list above for reasons (auth, config mismatch, missing build)"
   else
     ok "No failed MCP connections"
   fi
   if [[ "$PENDING_COUNT" -gt 0 ]]; then
     warn "$PENDING_COUNT MCP server(s) pending approval — check for duplicate/local .mcp.json overrides"
+    finding low "$PENDING_COUNT MCP server(s) pending approval — likely a duplicate project-local .mcp.json"
   fi
 else
   warn "claude CLI not found on PATH — skipping MCP check"
@@ -124,7 +126,7 @@ if [[ -d "$PLUGIN_CACHE" ]]; then
       full_path="$plugin_dir/$main_entry"
       if [[ ! -f "$full_path" ]]; then
         fail "Missing build output: $full_path"
-        FINDINGS+=("Plugin at $plugin_dir declares main entry '$main_entry' but the file doesn't exist. Likely needs: cd \"$plugin_dir\" && npm install && npm run build")
+        finding critical "Plugin at $plugin_dir declares main entry '$main_entry' but the file doesn't exist. Likely needs: cd \"$plugin_dir\" && npm install && npm run build"
         PLUGIN_ISSUES=$((PLUGIN_ISSUES + 1))
       fi
     fi
@@ -151,7 +153,7 @@ for dir in "${SCAN_DIRS[@]}"; do
   echo "    - Local .mcp.json files: $COUNT_MCP"
   if [[ "$COUNT_MCP" -gt 0 ]]; then
     warn "$COUNT_MCP project-level .mcp.json file(s) under $dir may duplicate global MCP config"
-    FINDINGS+=("$COUNT_MCP project-level .mcp.json file(s) under $dir: $(echo "$LOCAL_MCP" | tr '\n' ' ')")
+    finding medium "$COUNT_MCP project-level .mcp.json file(s) under $dir: $(echo "$LOCAL_MCP" | tr '\n' ' ')"
   fi
 done
 
@@ -199,6 +201,7 @@ OpenCode|$HOME/.config/opencode|opencode|"
       else
         flag "$label has local activity but is NOT in your known_tools list."
       fi
+      finding high "$label has local activity and is not in known_tools ($key)"
       FLAGGED_TOOLS+=("$key")
     fi
   done <<< "$TOOL_TABLE"
@@ -244,8 +247,11 @@ if [[ ${#FINDINGS[@]} -eq 0 ]]; then
   ok "No other actionable issues found. Environment looks clean."
 else
   echo -e "${BOLD}${#FINDINGS[@]} issue(s) found:${RESET}"
-  for i in "${!FINDINGS[@]}"; do
-    echo "  $((i+1)). ${FINDINGS[$i]}"
+  for sev in critical high medium low; do
+    for entry in "${FINDINGS[@]}"; do
+      [[ "${entry%%|*}" == "$sev" ]] || continue
+      printf '  [%s] %s\n' "$(echo "$sev" | tr '[:lower:]' '[:upper:]')" "${entry#*|}"
+    done
   done
 fi
 
