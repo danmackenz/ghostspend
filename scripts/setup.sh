@@ -34,7 +34,12 @@ if [[ -f "$CONFIG_FILE" ]]; then
   warn "Existing config found at $CONFIG_FILE"
   read -rp "Reconfigure from scratch? [y/N] " RECONFIGURE
   if [[ ! "$RECONFIGURE" =~ ^[Yy]$ ]]; then
-    echo "Keeping existing config. Exiting."
+    echo "Keeping existing config."
+    read -rp "Run an audit now? [y/N] " RUN_AUDIT
+    if [[ "$RUN_AUDIT" =~ ^[Yy]$ ]]; then
+      exec "$(dirname "${BASH_SOURCE[0]}")/ghostspend.sh"
+    fi
+    echo "Run ./ghostspend.sh (or /gs-audit in Claude Code) any time."
     exit 0
   fi
 fi
@@ -96,10 +101,12 @@ echo -e "\n${BOLD}Which of these do you actively and knowingly use?${RESET}"
 echo "(Anything you don't confirm here will be flagged in future audits if"
 echo "it shows spend — that's the whole point.)"
 KNOWN_TOOLS=()
-for tool in "${DETECTED[@]}"; do
-  read -rp "  Do you use $tool? [y/N] " USE_TOOL
-  [[ "$USE_TOOL" =~ ^[Yy]$ ]] && KNOWN_TOOLS+=("$tool")
-done
+if [[ ${#DETECTED[@]} -gt 0 ]]; then
+  for tool in "${DETECTED[@]}"; do
+    read -rp "  Do you use $tool? [y/N] " USE_TOOL
+    [[ "$USE_TOOL" =~ ^[Yy]$ ]] && KNOWN_TOOLS+=("$tool")
+  done
+fi
 
 
 # --- Ask for scan directories -----------------------------------------------
@@ -127,15 +134,22 @@ fi
 
 
 # --- Build and write config -------------------------------------------------
-KNOWN_TOOLS_JSON=$(printf '"%s",' "${KNOWN_TOOLS[@]}")
-KNOWN_TOOLS_JSON="[${KNOWN_TOOLS_JSON%,}]"
-SCAN_DIRS_JSON=$(printf '"%s",' "${SCAN_DIRS[@]}")
-SCAN_DIRS_JSON="[${SCAN_DIRS_JSON%,}]"
+# Join array elements into a JSON array literal. Safe on bash 3.2 with set -u,
+# where "${empty[@]}" is an unbound-variable error rather than an empty list.
+json_array() {
+  local out=""
+  if [[ $# -gt 0 ]]; then
+    out=$(printf '"%s",' "$@")
+    out="${out%,}"
+  fi
+  printf '[%s]' "$out"
+}
+
+KNOWN_TOOLS_JSON=$(json_array ${KNOWN_TOOLS[@]+"${KNOWN_TOOLS[@]}"})
+SCAN_DIRS_JSON=$(json_array ${SCAN_DIRS[@]+"${SCAN_DIRS[@]}"})
 TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
-
-echo -e "\n${BOLD}Config to be written:${RESET}"
-cat <<EOF
+CONFIG_JSON=$(cat <<EOF
 {
   "known_tools": $KNOWN_TOOLS_JSON,
   "scan_dirs": $SCAN_DIRS_JSON,
@@ -144,26 +158,26 @@ cat <<EOF
   "setup_completed_at": "$TIMESTAMP"
 }
 EOF
+)
 
+echo -e "\n${BOLD}Config to be written:${RESET}"
+printf '%s\n' "$CONFIG_JSON"
 
 read -rp $'\nWrite this to '"$CONFIG_FILE"'? [y/N] ' CONFIRM_WRITE
 if [[ ! "$CONFIRM_WRITE" =~ ^[Yy]$ ]]; then
   echo "Aborted. No config written."
+  read -rp "Run an audit now? [y/N] " RUN_AUDIT
+  if [[ "$RUN_AUDIT" =~ ^[Yy]$ ]]; then
+    exec "$(dirname "${BASH_SOURCE[0]}")/ghostspend.sh"
+  fi
+  echo "Run ./ghostspend.sh (or /gs-audit in Claude Code) any time."
   exit 0
 fi
 
 
 mkdir -p "$CONFIG_DIR"
-cat > "$CONFIG_FILE" <<EOF
-{
-  "known_tools": $KNOWN_TOOLS_JSON,
-  "scan_dirs": $SCAN_DIRS_JSON,
-  "ccusage_installed": $CCUSAGE_INSTALLED,
-  "rtk_installed": $RTK_INSTALLED,
-  "setup_completed_at": "$TIMESTAMP"
-}
-EOF
+printf '%s\n' "$CONFIG_JSON" > "$CONFIG_FILE"
 
 
 ok "Config written to $CONFIG_FILE"
-echo -e "\n${BOLD}Setup complete.${RESET} Run ./ghostspend.sh (or /audit in Claude Code) any time."
+echo -e "\n${BOLD}Setup complete.${RESET} Run ./ghostspend.sh (or /gs-audit in Claude Code) any time."

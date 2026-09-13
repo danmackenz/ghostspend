@@ -89,7 +89,7 @@ without explicit confirmation.
 
 Once config is written (or confirmed as unchanged), ask the user directly: "GhostSpend setup complete. Ready to run an audit? (yes/no)" Keep the command name out of the visible question — this is a plain yes/no prompt, not a suggestion to type a command.
 
-- If the user answers **yes**, invoke the `ghostspend-audit` skill immediately in the background. Do not wait for the user to separately run `/gs-audit`.
+- If the user answers **yes**, invoke the `ghostspend-audit` skill immediately. Do not wait for the user to separately run `/gs-audit`.
 - If the user answers **no**, confirm that `/gs-audit` remains available any time they're ready, and end the setup skill there.
 
 ## Output Format
