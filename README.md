@@ -116,31 +116,31 @@ It audits Claude Code, Codex CLI, Gemini CLI, GitHub Copilot CLI, OpenCode, and 
 
 > **More than a total:** GhostSpend creates a one-time baseline of tools you intentionally use, then flags observed usage outside that baseline as unexpected.
 
-## Quick install
+## Quick install (Terminal)
 
-Install the GhostSpend Skills pack:
+Install the **Ghost$pend** Skills pack:
 
 ```bash
-npx skills add [https://skills.sh/p/qtjSwDWCq52yVpxi](https://skills.sh/p/qtjSwDWCq52yVpxi)
+npx skills add https://skills.sh/p/qtjSwDWCq52yVpxi
 ```
 
-[Open the GhostSpend Skills pack](https://www.skills.sh/p/qtjSwDWCq52yVpxi)
+[Open the **Ghost$pend** Skills pack on **Skills.sh**](https://www.skills.sh/p/qtjSwDWCq52yVpxi)
 
 ### Included skills
 
 | Skill | Purpose |
 | --- | --- |
-| `ghostspend-setup` | Creates your first known-tools baseline |
-| `ghostspend-audit` | Audits spend, configuration, and AI CLI tooling |
-| `ghostspend-fix` | Guides remediation for supported findings |
+| `/ghostspend-setup` | Initiates the **Ghost$pend** configuration |
+| `/ghostspend-audit` | Audits spend, configuration, and AI CLI tooling |
+| `/ghostspend-fix` | Guides remediation for supported findings |
 
 After installing, initialise your baseline:
 
-```text
+```bash
 /ghostspend-setup
 ```
 
-Then run an audit or start guided remediation:
+You'll be prompted to run an audit then guided remediation:
 
 ```text
 /ghostspend-audit
@@ -149,17 +149,17 @@ Then run an audit or start guided remediation:
 
 ## Install in Claude Desktop
 
-Add GhostSpend as a marketplace from the repository:
+Add **Ghost$pend** as a marketplace from the repository:
 
-1. Open **Claude Desktop**.
-2. Go to **Settings → Plugins**.
-3. Select **Add**, then choose **Add marketplace**.
-4. Select **Add from a repository**.
-5. Paste the repository URL:
+ 1. Open **Claude Desktop**.
+ 2. Go to **Settings → Plugins**.
+ 3. Select **+Add**, then choose **Add marketplace**.
+ 4. Select **Add from a repository**.
+ 5. Paste the repository URL:
 
-   ```text
-   https://github.com/danmackenz/ghostspend.git
-   ```
+    ```text
+    https://github.com/danmackenz/ghostspend.git
+    ```
 
 6. Confirm the URL and select **Sync**.
 7. When GhostSpend appears, select **Add**.
@@ -169,10 +169,10 @@ Add GhostSpend as a marketplace from the repository:
    ```text
    /ghostspend-setup
    ```
+   
+   [Open the **Ghost$pend** repository](https://github.com/danmackenz/ghostspend)
 
-[Open the GhostSpend repository](https://github.com/danmackenz/ghostspend)
-
-## What GhostSpend checks
+## What **Ghost$pend** checks
 
 | Check | Purpose |
 | --- | --- |
@@ -191,7 +191,7 @@ Add GhostSpend as a marketplace from the repository:
 Recommended for a fast, agent-ready installation:
 
 ```bash
-npx skills add [https://skills.sh/p/qtjSwDWCq52yVpxi](https://skills.sh/p/qtjSwDWCq52yVpxi)
+npx skills add https://skills.sh/p/qtjSwDWCq52yVpxi]
 ```
 
 ### Claude Code plugin
@@ -199,7 +199,7 @@ npx skills add [https://skills.sh/p/qtjSwDWCq52yVpxi](https://skills.sh/p/qtjSwD
 Clone the repository and install the plugin files locally:
 
 ```bash
-git clone [https://github.com/danmackenz/ghostspend.git](https://github.com/danmackenz/ghostspend.git)
+git clone https://github.com/danmackenz/ghostspend.git
 mkdir -p ~/.claude/plugins/ghostspend
 
 rsync -a \
