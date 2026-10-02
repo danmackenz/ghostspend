@@ -1,6 +1,8 @@
+# ANTRHROPIC
+
 <div align="center">
 
-### [ANTHROPIC PLUGIN](https://www.skills.sh/p/qtjSwDWCq52yVpxi)
+### [CLAUDE PLUGIN](https://www.skills.sh/p/qtjSwDWCq52yVpxi)
 
 <p>
   <a href="https://www.skills.sh/p/qtjSwDWCq52yVpxi">
@@ -11,7 +13,6 @@
   </a>
 </p>
 
-</div>
 </div>
 
 <p align="center">
@@ -26,32 +27,30 @@
 
 ### Built for real-world AI tooling
 
- <a href="https://github.com/danmackenz/ghostspend/actions/workflows/ci.yml">
-    <img
-      alt="CI"
-      src="https://img.shields.io/github/actions/workflow/status/danmackenz/ghostspend/ci.yml?branch=main&style=flat-square&label=build&labelColor=111827&color=15803D&logo=githubactions&logoColor=white"
-    />
-  </a>
-  <a href="https://github.com/danmackenz/ghostspend/releases">
-    <img
-      alt="Latest release"
-      src="https://img.shields.io/github/v/release/danmackenz/ghostspend?display_name=tag&style=flat-square&label=release&labelColor=111827&color=0F766E&logo=github"
-    />
-  </a>
-  <a href="./LICENSE">
-    <img
-      alt="MIT license"
-      src="https://img.shields.io/badge/license-MIT-6B7280?style=flat-square&labelColor=111827&logo=open-source-initiative&logoColor=white"
-    />
-  </a>
-</p>
+<a href="https://github.com/danmackenz/ghostspend/actions/workflows/ci.yml">
+  <img
+    alt="CI"
+    src="https://img.shields.io/github/actions/workflow/status/danmackenz/ghostspend/ci.yml?branch=main&style=flat-square&label=build&labelColor=111827&color=15803D&logo=githubactions&logoColor=white"
+  />
+</a>
+<a href="https://github.com/danmackenz/ghostspend/releases">
+  <img
+    alt="Latest release"
+    src="https://img.shields.io/github/v/release/danmackenz/ghostspend?display_name=tag&style=flat-square&label=release&labelColor=111827&color=0F766E&logo=github"
+  />
+</a>
+<a href="./LICENSE">
+  <img
+    alt="MIT license"
+    src="https://img.shields.io/badge/license-MIT-6B7280?style=flat-square&labelColor=111827&logo=open-source-initiative&logoColor=white"
+  />
+</a>
 
 </div>
 
-
 <div align="center">
 
-### Bash toolkit for finding hidden token and cost leakage across modern AI CLI workflows.
+### Bash toolkit for finding hidden token and cost leakage across modern AI CLI workflows
 
 <a href="#quick-install">Quick install</a> ·
 <a href="#install-in-claude-desktop">Claude Desktop</a> ·
@@ -108,6 +107,12 @@
     </tr>
   </tbody>
 </table>
+
+GhostSpend is a free, open-source Claude Code plugin and standalone Bash toolkit for finding hidden token and cost leakage across modern AI CLI workflows.
+
+It audits Claude Code, Codex CLI, Gemini CLI, GitHub Copilot CLI, OpenCode, and related tooling for misfiring hooks, stale or duplicated MCP servers, failed plugin builds, project configuration drift, and spend from tools you did not realise were active.
+
+> **More than a total:** GhostSpend creates a one-time baseline of tools you intentionally use, then flags observed usage outside that baseline as unexpected.
 
 ## Quick install
 
