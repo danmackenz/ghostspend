@@ -1,16 +1,44 @@
-# <img src="docs/assets/ghostspend-icon.png" alt="GhostSpend logo" width="48" valign="middle"/> GhostSpend
+# GhostSpend
 
-Find the AI spend you didn't know you had — and the exact steps to fix it.
+![GhostSpend logo](docs/assets/ghostspend-icon.png)
 
-GhostSpend audits your entire AI CLI toolchain (Claude Code, Codex, Gemini CLI, Copilot, and more) for hidden cost leaks: misfiring hooks, dead or duplicated MCP servers, unbuilt plugins, config drift across projects, and spend from tools you didn't realize were running. It doesn't just report a number — it flags what's unexpected and tells you precisely what to run to fix it.
+**Find the AI spend you didn't know you had, and the exact steps to fix it.**
 
-This is a free, open-source Claude Code plugin (and standalone script) that finds hidden token/cost leakage across your **entire AI CLI toolchain** — not just Claude Code, but Codex CLI, Gemini CLI, GitHub Copilot CLI, and others — plus misconfigured hooks, dead or duplicated MCP servers, plugins that never finished building, and project-level config drift across multiple repos.
+[![skills.sh](https://skills.sh/b/danmackenz/ghostspend)](https://skills.sh/danmackenz/ghostspend)
+[![CI](https://img.shields.io/github/actions/workflow/status/danmackenz/ghostspend/ci.yml?branch=main&label=CI&style=flat-square)](https://github.com/danmackenz/ghostspend/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/danmackenz/ghostspend?style=flat-square)](https://github.com/danmackenz/ghostspend/releases)
+[![License](https://img.shields.io/github/license/danmackenz/ghostspend?style=flat-square)](LICENSE.md)
+[![Claude Code Plugin](https://img.shields.io/badge/Claude%20Code-plugin-D97757?style=flat-square)](#install)
 
-Born from a real diagnostic session that traced an unexpectedly high weekly spend down to specific causes, including a genuine surprise: a chunk of spend was coming from **Codex CLI and OpenCode** — tools the user hadn't confirmed as part of their active workflow — invisible to Claude-only tools, and only surfaced by checking cross-provider usage logs.
+[Install](#install) · [Documentation](docs/config.md) · [Example output](examples/sample-audit-output.md) · [Roadmap](ROADMAP.md) · [Security](SECURITY.md)
 
-## What Makes GhostSpend Different
+---
 
-Most usage trackers show you a number. GhostSpend asks *"did you expect this?"* — it records a one-time baseline of which AI tools you actually, knowingly use, then flags anything outside that baseline on every future audit, front and center, instead of burying it in a combined total.
+GhostSpend is a free, open-source Claude Code plugin and standalone bash script. It audits your entire AI CLI toolchain for hidden token and cost leakage. That covers Claude Code, Codex CLI, Gemini CLI, GitHub Copilot CLI and more.
+
+It finds:
+
+- Misfiring hooks
+- Dead or duplicated MCP servers
+- Plugins that never finished building
+- Config drift across projects
+- Spend from tools you didn't realise were running
+
+It doesn't just report a number. It flags what's unexpected and tells you exactly what to run to fix it.
+
+## Install
+
+```bash
+npx skills add danmackenz/ghostspend
+```
+
+## What makes GhostSpend different
+
+Most usage trackers show you a number. GhostSpend asks *"did you expect this?"* It records a one-time baseline of the AI tools you knowingly use. Every later audit flags anything outside that baseline, front and center, instead of burying it in a combined total.
+
+## Why it exists
+
+GhostSpend came out of a real diagnostic session that traced an unexpectedly high weekly spend to specific causes. One of them was a surprise. Part of the spend came from **Codex CLI and OpenCode**, tools the user hadn't confirmed as part of their active workflow. Claude-only tools couldn't see that spend. Only cross-provider usage logs exposed it.
 
 ## What It Checks
 
