@@ -1,254 +1,356 @@
-# GhostSpend
+<div align="center">
+
+### [ANTHROPIC PLUGIN](https://www.skills.sh/p/qtjSwDWCq52yVpxi)
+
+<p>
+  <a href="https://www.skills.sh/p/qtjSwDWCq52yVpxi">
+    <img
+      alt="Install GhostSpend from skills.sh"
+      src="https://img.shields.io/badge/Install%20GhostSpend-skills.sh%20pack-111111?style=for-the-badge&labelColor=111111"
+    />
+  </a>
+</p>
+
+</div>
+</div>
+
+<p align="center">
+  <img
+    src="https://cdn.danmackenzie.co.uk/development/ghostspend/hero/Premium%20GhostSpend%20README%20banner%20hero.png"
+    alt="GhostSpend banner showing AI CLI spend auditing and remediation"
+    width="100%"
+  />
+</p>
 
 <div align="center">
 
-<img src="docs/assets/ghostspend-icon.png" alt="GhostSpend logo" width="96" />
+### Built for real-world AI tooling
 
-**Find the AI spend you didn't know you had, and the exact steps to fix it.**
-
-[![skills.sh](https://skills.sh/b/danmackenz/ghostspend)](https://skills.sh/danmackenz/ghostspend)
-[![CI](https://img.shields.io/github/actions/workflow/status/danmackenz/ghostspend/ci.yml?branch=main&label=CI&style=flat-square)](https://github.com/danmackenz/ghostspend/actions/workflows/ci.yml)
-[![Release](https://img.shields.io/github/v/release/danmackenz/ghostspend?style=flat-square)](https://github.com/danmackenz/ghostspend/releases)
-[![License](https://img.shields.io/github/license/danmackenz/ghostspend?style=flat-square)](LICENSE.md)
-[![Claude Code Plugin](https://img.shields.io/badge/Claude%20Code-plugin-D97757?style=flat-square)](#install)
-
-[Install](#install) · [Documentation](docs/config.md) · [Example output](examples/sample-audit-output.md) · [Roadmap](ROADMAP.md) · [Security](SECURITY.md)
+ <a href="https://github.com/danmackenz/ghostspend/actions/workflows/ci.yml">
+    <img
+      alt="CI"
+      src="https://img.shields.io/github/actions/workflow/status/danmackenz/ghostspend/ci.yml?branch=main&style=flat-square&label=build&labelColor=111827&color=15803D&logo=githubactions&logoColor=white"
+    />
+  </a>
+  <a href="https://github.com/danmackenz/ghostspend/releases">
+    <img
+      alt="Latest release"
+      src="https://img.shields.io/github/v/release/danmackenz/ghostspend?display_name=tag&style=flat-square&label=release&labelColor=111827&color=0F766E&logo=github"
+    />
+  </a>
+  <a href="./LICENSE">
+    <img
+      alt="MIT license"
+      src="https://img.shields.io/badge/license-MIT-6B7280?style=flat-square&labelColor=111827&logo=open-source-initiative&logoColor=white"
+    />
+  </a>
+</p>
 
 </div>
 
----
 
-GhostSpend is a free, open-source Claude Code plugin and standalone bash script. It audits your entire AI CLI toolchain for hidden token and cost leakage. That covers Claude Code, Codex CLI, Gemini CLI, GitHub Copilot CLI and more.
+<div align="center">
 
-It finds:
+### Bash toolkit for finding hidden token and cost leakage across modern AI CLI workflows.
 
-- Misfiring hooks
-- Dead or duplicated MCP servers
-- Plugins that never finished building
-- Config drift across projects
-- Spend from tools you didn't realise were running
+<a href="#quick-install">Quick install</a> ·
+<a href="#install-in-claude-desktop">Claude Desktop</a> ·
+<a href="#installation-options">Other install methods</a> ·
+<a href="#usage">Usage</a> ·
+<a href="docs/config.md">Configuration</a> ·
+<a href="examples/sample-audit-output.md">Example output</a> ·
+<a href="ROADMAP.md">Roadmap</a> ·
+<a href="SECURITY.md">Security</a>
 
-It doesn't just report a number. It flags what's unexpected and tells you exactly what to run to fix it.
+</div>
 
-## Install
+<br>
+<br>
+
+<table width="100%">
+  <thead>
+    <tr>
+      <th align="left" width="44%">What GhostSpend does</th>
+      <th width="12%"></th>
+      <th align="left" width="44%">Capability</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="left">⊘ Flags usage outside your known-tools baseline</td>
+      <td></td>
+      <td align="left">Unexpected spend detection</td>
+    </tr>
+    <tr>
+      <td align="left">◉ Surfaces activity across Claude Code, Codex CLI, Gemini CLI, OpenCode, and related tooling</td>
+      <td></td>
+      <td align="left">Cross-provider visibility</td>
+    </tr>
+    <tr>
+      <td align="left">⌘ Checks hooks, MCP servers, plugin builds, and project drift</td>
+      <td></td>
+      <td align="left">Configuration diagnostics</td>
+    </tr>
+    <tr>
+      <td align="left">→ Points to exact commands and next steps to fix issues</td>
+      <td></td>
+      <td align="left">Guided remediation</td>
+    </tr>
+    <tr>
+      <td align="left">∴ Separates expected activity from unexpected usage instead of only reporting totals</td>
+      <td></td>
+      <td align="left">Baseline-first auditing</td>
+    </tr>
+    <tr>
+      <td align="left">⌁ Supports setup, audit, and guided fix workflows inside Claude environments</td>
+      <td></td>
+      <td align="left">Claude-native workflow</td>
+    </tr>
+  </tbody>
+</table>
+
+## Quick install
+
+Install the GhostSpend Skills pack:
 
 ```bash
-npx skills add danmackenz/ghostspend
+npx skills add [https://skills.sh/p/qtjSwDWCq52yVpxi](https://skills.sh/p/qtjSwDWCq52yVpxi)
 ```
 
-## What makes GhostSpend different
+[Open the GhostSpend Skills pack](https://www.skills.sh/p/qtjSwDWCq52yVpxi)
 
-Most usage trackers show you a number. GhostSpend asks *"did you expect this?"* It records a one-time baseline of the AI tools you knowingly use. Every later audit flags anything outside that baseline, front and center, instead of burying it in a combined total.
+### Included skills
 
-## Why it exists
+| Skill | Purpose |
+| --- | --- |
+| `ghostspend-setup` | Creates your first known-tools baseline |
+| `ghostspend-audit` | Audits spend, configuration, and AI CLI tooling |
+| `ghostspend-fix` | Guides remediation for supported findings |
 
-GhostSpend came out of a real diagnostic session that traced an unexpectedly high weekly spend to specific causes. One of them was a surprise. Part of the spend came from **Codex CLI and OpenCode**, tools the user hadn't confirmed as part of their active workflow. Claude-only tools couldn't see that spend. Only cross-provider usage logs exposed it.
+After installing, initialise your baseline:
 
-## What It Checks
+```text
+/ghostspend-setup
+```
 
-| # | Check | Why it matters |
-| --- | --- | --- |
-| 1 | Global hooks (`~/.claude/settings.json`) | Hooks firing on every tool call add overhead |
-| 2 | MCP server connectivity (`claude mcp list`) | Failed/duplicated servers indicate stale config |
-| 3 | Plugin build integrity | Cached plugins shipped as TypeScript source sometimes never get built, causing silent connection failures every session |
-| 4 | Project-level config drift | Individual repos can carry `.claude/settings.json` or `.mcp.json` that duplicates or conflicts with global config |
-| 5 | **Cross-provider spend** (via `ccusage`) | Surfaces Codex CLI, Gemini CLI, OpenCode, and other tool usage in one combined report |
-| 6 | **Unexpected-tool flagging** (Codex CLI, Gemini CLI, OpenCode) | Cross-references local activity against your known-tools baseline — the core feature |
-| 7 | Orphaned AI CLI processes | Catches zombie processes left running after a crashed connection |
+Then run an audit or start guided remediation:
 
-## Important Limitations (Read Before Relying On This)
+```text
+/ghostspend-audit
+/ghostspend-fix
+```
 
-- **On-demand audit, not real-time monitoring.** Claude Code hooks don't currently receive live token/cost data as input — an [open upstream feature request](https://github.com/anthropics/claude-code/issues/11008), not something GhostSpend can work around. Run it periodically; don't expect automatic alerts.
-- **Uses your existing Bash tool permissions.** No special access is requested beyond what Claude Code's Bash tool already has. Expect approval prompts for new command types on first run unless pre-approved in `settings.json`.
-- **Doesn't auto-fix anything.** It diagnoses and proposes fixes; Claude will ask for confirmation before any write action or install.
-- **Codex CLI has no native dollar-cost tracking.** `ccusage`'s Codex figures are *estimates* from token counts against third-party pricing data (LiteLLM), not an OpenAI-confirmed bill. GhostSpend reports this distinction rather than presenting estimates as fact.
-- **Doesn't explain *why* a background tool ran.** It flags *that* a tool has unexpected spend and points toward likely causes (cron jobs, launchd agents, IDE extensions, notify hooks), but tracing the exact trigger is a manual follow-up.
-- **bash 3.2 compatible by design.** macOS ships bash 3.2 by default (no `mapfile`, no bash4+ features). Both scripts are deliberately written to run on stock macOS without requiring a Homebrew bash upgrade.
-- **MCP connectivity is checked at audit time only.** A server that failed
-  and retried repeatedly since your last audit, but is connected right now,
-  will not be flagged. GhostSpend does not currently read MCP logs — see
-  [`ROADMAP.md`](ROADMAP.md).
+## Install in Claude Desktop
 
-## Prerequisites
+Add GhostSpend as a marketplace from the repository:
 
-These are the only things you need *before* cloning and running setup — everything else (`ccusage`, `rtk`) is detected and offered for install interactively by `setup.sh`, so it isn't duplicated here.
+1. Open **Claude Desktop**.
+2. Go to **Settings → Plugins**.
+3. Select **Add**, then choose **Add marketplace**.
+4. Select **Add from a repository**.
+5. Paste the repository URL:
 
-| Requirement | Why | Install command (if missing) |
-| --- | --- | --- |
-| `git` | To clone the repo | macOS: `xcode-select --install` · Debian/Ubuntu: `sudo apt install git` |
-| `bash` | Runs the scripts (3.2+ is fine — no upgrade needed on macOS) | Pre-installed on macOS and Linux |
-| `node` + `npm` | Required by `ccusage` (and `rtk`, optional) | macOS: `brew install node` · Debian/Ubuntu: `sudo apt install nodejs npm` · or [nodejs.org](https://nodejs.org) |
-| Homebrew (macOS only, optional) | Convenience for installing `node` and, for contributors, `shellcheck` | `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"` |
+   ```text
+   https://github.com/danmackenz/ghostspend.git
+   ```
 
-Contributors modifying the scripts also need `shellcheck` (`brew install shellcheck` on macOS) — this is a dev-only dependency, not required for end users running the tool.
+6. Confirm the URL and select **Sync**.
+7. When GhostSpend appears, select **Add**.
+8. Choose an install scope: **User (global)**, **Project scoped**, or **Session only**.
+9. Initialise your baseline:
 
-## Installation
+   ```text
+   /ghostspend-setup
+   ```
 
-### Option A: As a Claude Code plugin (recommended)
+[Open the GhostSpend repository](https://github.com/danmackenz/ghostspend)
+
+## What GhostSpend checks
+
+| Check | Purpose |
+| --- | --- |
+| Global hooks (`~/.claude/settings.json`) | Identifies hooks that can add overhead to every tool call |
+| MCP server connectivity (`claude mcp list`) | Finds stale, failing, or duplicated MCP servers |
+| Plugin build integrity | Detects plugin builds that fail silently or retry repeatedly |
+| Project configuration drift | Identifies repository settings that duplicate or conflict with global settings |
+| Cross-provider spend via `ccusage` | Brings Codex CLI, Gemini CLI, OpenCode, and other observed usage into one report |
+| Unexpected-tool flagging | Compares activity with your known-tools baseline |
+| Orphaned AI CLI processes | Finds zombie processes remaining after crashes or disconnected sessions |
+
+## Installation options
+
+### Skills pack
+
+Recommended for a fast, agent-ready installation:
 
 ```bash
-git clone https://github.com/danmackenz/ghostspend.git
+npx skills add [https://skills.sh/p/qtjSwDWCq52yVpxi](https://skills.sh/p/qtjSwDWCq52yVpxi)
+```
+
+### Claude Code plugin
+
+Clone the repository and install the plugin files locally:
+
+```bash
+git clone [https://github.com/danmackenz/ghostspend.git](https://github.com/danmackenz/ghostspend.git)
 mkdir -p ~/.claude/plugins/ghostspend
-rsync -a --exclude='.git' --exclude='.github' --exclude='CONTRIBUTING.md' --exclude='SECURITY.md' --exclude='CODE_OF_CONDUCT.md' \
+
+rsync -a \
+  --exclude='.git' \
+  --exclude='.github' \
+  --exclude='CONTRIBUTING.md' \
+  --exclude='SECURITY.md' \
+  --exclude='CODE_OF_CONDUCT.md' \
   ghostspend/ ~/.claude/plugins/ghostspend/
+
 chmod +x ~/.claude/plugins/ghostspend/scripts/*.sh
 ```
 
-Restart Claude Code, then run `/gs-setup` once, followed by `/gs-audit` any time.
+Restart Claude Code, then run:
 
-Once published to a marketplace, you can add it either from the terminal inside Claude Code:
-
-```bash
-/plugin marketplace add danmackenz/ghostspend
-/plugin install ghostspend
+```text
+/ghostspend-setup
+/ghostspend-audit
 ```
 
-...or from the Claude Desktop app GUI:
+### Standalone scripts
 
-1. Open Claude Code inside Claude Desktop.
-2. Go to **Settings → Plugins → Add → Add marketplace**.
-3. Choose **Add from a repository** (syncs a plugin marketplace from a GitHub repository or Git URL).
-4. Paste the GhostSpend Git repository URL.
-5. Click **Sync**.
-
-### Option B: Standalone scripts (no Claude Code required)
+Use GhostSpend without Claude Code:
 
 ```bash
-git clone https://github.com/danmackenz/ghostspend.git
+git clone [https://github.com/danmackenz/ghostspend.git](https://github.com/danmackenz/ghostspend.git)
 cd ghostspend/scripts
 chmod +x setup.sh ghostspend.sh
 ./setup.sh
 ./ghostspend.sh
 ```
 
-`setup.sh` will check for `ccusage` and offer to run `npm install -g ccusage` for you if it's missing — you don't need to do this manually first.
+`setup.sh` checks for [`ccusage`](https://www.npmjs.com/package/ccusage) and offers to install it when needed.
 
 ## Usage
 
-**Inside Claude Code:**
+### Claude Code commands
 
-```bash
-/gs-setup
-/gs-audit
-/gs-fix
+```text
+/ghostspend-setup
+/ghostspend-audit
+/ghostspend-fix
 ```
 
-Or just ask: *"Run a GhostSpend audit across all my AI tools."* The `ghostspend-orchestrator` agent handles running setup first if needed, then the audit, then presents one consolidated report with flagged findings at the top, then offers to walk through fixes.
+You can also ask Claude to run an audit in natural language, for example:
 
-`/gs-fix` is currently **Phase 2**: it only offers **Safest** and **Skip** (no Balanced or free-text "Other" yet), and only for two finding types — an unbuilt plugin and a flagged tool not in your `known_tools`. Every other finding is reported as needing manual follow-up rather than guessed at. It never executes anything without showing the exact command first and getting your explicit yes, and there's no standalone bash equivalent — `/gs-fix` requires Claude Code.
+> Run a GhostSpend audit across all my AI tools.
 
-**From any terminal:**
+The `ghostspend-orchestrator` agent runs setup when required, performs the audit, surfaces unexpected findings, and can guide the supported remediation flow.
+
+### Terminal commands
 
 ```bash
-./scripts/setup.sh                                             # one-time, interactive
-./scripts/ghostspend.sh                                        # run any time after
+./scripts/setup.sh
+./scripts/ghostspend.sh
 ./scripts/ghostspend.sh ~/Documents/GitHub "~/Documents/Claude Projects"
 ```
 
-Quote any path containing spaces. If you skip `setup.sh`, `ghostspend.sh` still works, just without unexpected-usage flagging.
+Quote every path that contains spaces.
 
-To check a specific tool directly:
+### Provider drill-downs
 
 ```bash
 ccusage codex daily
 ccusage gemini daily
 ```
 
-## Troubleshooting
+## Prerequisites
 
-### "ccusage not installed" warning
+| Requirement | Purpose | Installation |
+| --- | --- | --- |
+| `git` | Clones the repository | macOS: `xcode-select --install`; Debian/Ubuntu: `sudo apt install git` |
+| `bash` | Runs GhostSpend scripts | Included with macOS and most Linux distributions |
+| Node.js and npm | Required by `ccusage` | macOS: `brew install node`; Debian/Ubuntu: `sudo apt install nodejs npm`; or [nodejs.org](https://nodejs.org) |
+| Homebrew (optional) | Convenient package installation on macOS | [Install Homebrew](https://brew.sh) |
 
-GhostSpend depends on [`ccusage`](https://www.npmjs.com/package/ccusage) for cross-provider token/spend data. If you see a warning instead of numbers, install it globally so audits run faster and don't re-fetch it via `npx` every time:
-
-```bash
-npm install -g ccusage
-```
-
-Verify it worked:
-
-```bash
-which ccusage
-ccusage --version
-```
-
-### No usage data shows up for today
-
-If you've hit a weekly or usage-window limit on Claude Code (or another provider), new API calls are blocked until the limit resets — meaning **no new spend is being recorded at all**, not that everything is suddenly efficient. A flat total right after hitting a cap doesn't mean a fix worked; it means data collection paused. Re-run the audit after your limit window resets for a meaningful comparison.
-
-### A tool shows up as detected but has $0 spend
-
-GhostSpend's tool detection checks for the *presence* of a tool's local config/data directory (e.g. `~/.codex`, `~/.gemini`, `~/.config/opencode`), separately from whether `ccusage` reports any spend for it. A tool can be installed with no recent usage — this isn't an error, just a heads-up in case you forgot you installed it.
-
-**A tool I use is showing as `[FLAGGED]`**
-
-This means the tool has usage data but isn't in the `known_tools` array in `~/.ghostspend/config.json`. This is expected the first time you add a new tool to your workflow. Fix it by re-running `./scripts/setup.sh` (or `/gs-setup`) and answering `y` when asked about that tool, or by editing the config manually — see [`docs/config.md`](docs/config.md) for the exact schema.
-
-### Codex CLI spend numbers look approximate
-
-This is expected, not a bug. Codex CLI has no native dollar-cost tracking; `ccusage`'s Codex figures are estimates derived from token counts against third-party pricing data (LiteLLM), not an OpenAI-confirmed bill. Treat Codex figures as directional, not exact, when making budget decisions.
-
-**`shellcheck: command not found`**
-
-This only affects contributors modifying the scripts, not end users running them. Install it via Homebrew:
+Contributors who edit the scripts should also install `shellcheck`:
 
 ```bash
 brew install shellcheck
 ```
 
-### Scripts fail with "permission denied"
+## Important limitations
 
-Make sure the scripts are executable:
+- **On-demand audit:** GhostSpend is not real-time monitoring and does not send automatic spend alerts.
+- **Normal permissions:** It uses Claude Code's existing Bash permission and approval model; it does not request a separate privileged access tier.
+- **Confirmation-first remediation:** GhostSpend diagnoses and proposes changes, but does not apply changes without your confirmation.
+- **Estimated Codex costs:** `ccusage` estimates Codex CLI spend from token counts and third-party pricing data; it is not an OpenAI-confirmed invoice.
+- **Trigger attribution:** GhostSpend can identify unexpected activity and likely causes, but may not prove the exact process that initiated it.
+- **macOS compatibility:** The scripts intentionally support stock macOS Bash 3.2; no Homebrew Bash upgrade is needed to run them.
+- **Point-in-time MCP checks:** MCP connectivity is checked at audit time rather than continuously. See [ROADMAP.md](ROADMAP.md) for planned work.
+
+## Troubleshooting
+
+### `ccusage` is not installed
+
+```bash
+npm install -g ccusage
+which ccusage
+ccusage --version
+```
+
+### Scripts return `permission denied`
 
 ```bash
 chmod +x scripts/*.sh
 ```
 
-### Claude Code prompts for approval on every command
+### A known tool is flagged unexpectedly
 
-This is expected behavior, not a bug in GhostSpend. The plugin runs standard shell commands (`find`, `pgrep`, `claude mcp list`, etc.) through Claude Code's normal Bash tool — the same approval flow that applies to any command Claude Code runs on your behalf. GhostSpend does not request or need any special permission tier beyond what Claude Code already provides.
+Re-run setup and include the tool in your baseline:
 
-### Windows
+```text
+/ghostspend-setup
+```
 
-GhostSpend's scripts are bash-based and currently only tested on macOS and Linux. Windows users should run them inside WSL. Native Windows/PowerShell support is tracked in [`ROADMAP.md`](ROADMAP.md) — contributions welcome.
+You can also edit `~/.ghostspend/config.json` manually. See the [configuration reference](docs/config.md).
 
-## Platform Notes
+### No usage data appears today
 
-- **macOS/Linux**: Works as-is, including stock macOS bash 3.2 — no Homebrew bash upgrade required to *run* the tool (only to *develop* it, for `shellcheck`).
-- **Windows**: Run via WSL or Git Bash; native PowerShell not yet supported (good first contribution — see below).
-- **Requires**: `bash`, `find`, `grep`, `pgrep`. Strongly recommended: `ccusage` for the cross-provider spend check (needs `node`/`npm`). Optional: `rtk` for a faster Claude-Code-only savings summary.
+If a provider usage cap or billing window limit has been reached, new requests may be blocked until it resets. A flat usage total immediately after a cap is reached does not prove a remediation worked; run another audit after the usage window resets.
 
-## Repository Structure
+### Windows support
 
-```bash
+GhostSpend is Bash-based and currently intended for macOS and Linux. On Windows, use WSL or Git Bash. Native PowerShell support is planned; see [ROADMAP.md](ROADMAP.md).
+
+## Repository structure
+
+```text
 ghostspend/
 ├── .claude-plugin/
-│   ├── plugin.json                    # Plugin manifest
-│   └── marketplace.json               # Plugin marketplace manifest
+│   ├── plugin.json
+│   └── marketplace.json
 ├── agents/
-│   └── ghostspend-orchestrator.md     # Orchestrates setup + audit + fix into one flow
+│   └── ghostspend-orchestrator.md
 ├── skills/
 │   ├── ghostspend-setup/
-│   │   └── SKILL.md                   # First-run baseline configuration
+│   │   └── SKILL.md
 │   ├── ghostspend-audit/
-│   │   └── SKILL.md                   # Full diagnostic methodology, severity table
+│   │   └── SKILL.md
 │   └── ghostspend-fix/
-│       └── SKILL.md                   # Guided remediation (Phase 2: Safest/Skip only)
+│       └── SKILL.md
 ├── commands/
-│   ├── gs-setup.md                    # /gs-setup slash command
-│   ├── gs-audit.md                    # /gs-audit slash command
-│   └── gs-fix.md                      # /gs-fix slash command
+│   ├── gs-setup.md
+│   ├── gs-audit.md
+│   └── gs-fix.md
 ├── scripts/
-│   ├── setup.sh                       # Interactive, standalone-runnable, bash 3.2-compatible
-│   └── ghostspend.sh                  # Interactive, standalone-runnable, bash 3.2-compatible
+│   ├── setup.sh
+│   └── ghostspend.sh
 ├── examples/
-│   └── sample-audit-output.md         # Worked example (illustrative figures): raw ccusage → flagged report
+│   └── sample-audit-output.md
 ├── docs/
-│   ├── config.md                      # ~/.ghostspend/config.json schema reference
-│   └── gs-fix-dev-plan.md             # /gs-fix engineering spec (Phases 1-2 shipped in v0.2.0)
-├── .github/                           # Issue templates, PR template, CI workflow
-├── CLAUDE.md                          # Project contract Claude Code reads when developing this repo
-├── AGENTS.md                          # Same contributor guidance, portable to Codex/Cursor/other agents
-├── ROADMAP.md                         # Planned checks and explicit out-of-scope items
+│   ├── config.md
+│   └── gs-fix-dev-plan.md
+├── .github/
+├── CLAUDE.md
+├── AGENTS.md
+├── ROADMAP.md
 ├── LICENSE
 ├── CHANGELOG.md
 ├── CONTRIBUTING.md
@@ -258,25 +360,18 @@ ghostspend/
 └── README.md
 ```
 
-### A note on CLAUDE.md and AGENTS.md
-
-GhostSpend is a Claude Code plugin, but this repo's *own source code* is also maintained with AI coding agents — so it uses the same `CLAUDE.md`/`AGENTS.md` pattern documented for any Claude Code project. `CLAUDE.md` is the full project contract (commands, architecture rules, task workflows, security constraints, completion checklist) that Claude Code reads automatically when you work in this repo. `AGENTS.md` mirrors that same guidance in the portable, cross-tool format used by Codex, Cursor, and other agents — since this project's own contributors may well be using tools other than Claude Code to submit PRs.
-
-Don't confuse these with `skills/` and `agents/` in the plugin structure above — those are GhostSpend's *product*, shipped to end users. `CLAUDE.md`/`AGENTS.md` govern how anyone (human or AI) works on *this repository*.
-
 ## Contributing
 
-Issues and PRs welcome. See [`ROADMAP.md`](ROADMAP.md) for planned work and what's explicitly out of scope. Particularly useful contributions:
+Issues and pull requests are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md), then review [CLAUDE.md](CLAUDE.md) and [AGENTS.md](AGENTS.md) for project conventions.
 
-- **Windows-native PowerShell port** of both scripts.
-- **More provider-specific drill-downs** — automatically running `ccusage <tool> daily` for every flagged tool instead of just naming it.
-- **Root-cause tracing for background tool invocations** — scanning `launchd`/`cron`/CI config for anything that shells out to Codex, Gemini CLI, or triggers a Claude subagent with a non-default model.
-- **Oversized CLAUDE.md detection** — large project instruction files get re-sent as context every turn (this would be a new *audit check*, not a change to this repo's own `CLAUDE.md`).
-- **Historical trend tracking** — snapshotting `ccusage` output over time to show whether fixes actually reduced spend.
-- **Test coverage** for both scripts against mocked directory structures, including a bash 3.2 compatibility test in CI.
+Useful contributions include:
 
-See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the full process, and [`CLAUDE.md`](CLAUDE.md) / [`AGENTS.md`](AGENTS.md) for the working conventions this repo expects from any contributor, human or AI.
+- Windows-native PowerShell support
+- Provider-specific usage drill-downs
+- Root-cause tracing for background AI CLI invocations
+- Historical usage and spend trend tracking
+- Expanded test coverage, including Bash 3.2 compatibility testing
 
 ## License
 
-MIT — use, fork, and adapt freely. See [`LICENSE`](LICENSE).
+Released under the [MIT License](LICENSE).
