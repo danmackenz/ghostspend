@@ -1,8 +1,8 @@
+# GhostSpend
+
 <div align="center">
 
 <img src="docs/assets/ghostspend-icon.png" alt="GhostSpend logo" width="96" />
-
-# GhostSpend
 
 **Find the AI spend you didn't know you had, and the exact steps to fix it.**
 
