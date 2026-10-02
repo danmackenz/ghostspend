@@ -1,8 +1,8 @@
-# ANTRHROPIC
+# ANTHROPIC
 
 <div align="center">
 
-### [CLAUDE PLUGIN](https://www.skills.sh/p/qtjSwDWCq52yVpxi)
+<h3><a href="https://www.skills.sh/p/qtjSwDWCq52yVpxi">Claude Plugin</a></h3>
 
 <p>
   <a href="https://www.skills.sh/p/qtjSwDWCq52yVpxi">
@@ -12,6 +12,8 @@
     />
   </a>
 </p>
+
+</div>
 
 </div>
 
