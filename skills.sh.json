@@ -1,0 +1,27 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "notGrouped": "bottom",
+  "groupings": [
+    {
+      "title": "Setup",
+      "description": "Set a one-time baseline of the AI CLI tools you actually use, so unexpected spend stands out.",
+      "skills": [
+        "ghostspend-setup"
+      ]
+    },
+    {
+      "title": "Audit",
+      "description": "Find hidden token and cost leakage across Claude Code, Codex CLI, Gemini CLI and other tools, flagging anything outside your baseline.",
+      "skills": [
+        "ghostspend-audit"
+      ]
+    },
+    {
+      "title": "Fix",
+      "description": "Fix the causes of AI CLI spend: misconfigured hooks, dead MCP servers, broken plugin builds, and project config drift.",
+      "skills": [
+        "ghostspend-fix"
+      ]
+    }
+  ]
+}
