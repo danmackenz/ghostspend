@@ -1,6 +1,8 @@
 # GhostSpend
 
-![GhostSpend logo](docs/assets/ghostspend-icon.png)
+<div align="center">
+
+<img src="docs/assets/ghostspend-icon.png" alt="GhostSpend logo" width="96" />
 
 **Find the AI spend you didn't know you had, and the exact steps to fix it.**
 
@@ -11,6 +13,8 @@
 [![Claude Code Plugin](https://img.shields.io/badge/Claude%20Code-plugin-D97757?style=flat-square)](#install)
 
 [Install](#install) · [Documentation](docs/config.md) · [Example output](examples/sample-audit-output.md) · [Roadmap](ROADMAP.md) · [Security](SECURITY.md)
+
+</div>
 
 ---
 
