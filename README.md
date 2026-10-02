@@ -27,7 +27,7 @@
 
 <div align="center">
 
-### Built for real-world AI tooling
+## Built for real-world AI tooling
 
 <a href="https://github.com/danmackenz/ghostspend/actions/workflows/ci.yml">
   <img
